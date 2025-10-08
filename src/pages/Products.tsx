@@ -118,9 +118,21 @@ const Products = () => {
   ];
 
   const getProductsByCategory = (categoryFilter: string) => {
-    const filtered = products.filter(p => p.category === categoryFilter);
-    console.log(`Category ${categoryFilter}: ${filtered.length} products`);
-    return filtered;
+    return products.filter(p => p.category === categoryFilter);
+  };
+
+  const getCollectionsByCategory = (categoryFilter: string) => {
+    const categoryProducts = getProductsByCategory(categoryFilter);
+    const collections = [...new Set(categoryProducts.map(p => p.collection))];
+    return collections.sort((a, b) => {
+      if (a === null) return 1;
+      if (b === null) return -1;
+      return a.localeCompare(b);
+    });
+  };
+
+  const getProductsByCollection = (categoryFilter: string, collection: string | null) => {
+    return products.filter(p => p.category === categoryFilter && p.collection === collection);
   };
 
   return (
@@ -178,15 +190,17 @@ const Products = () => {
             // Category Sections
             categories.map((category, index) => {
               const categoryProducts = getProductsByCategory(category.filter);
+              const collections = getCollectionsByCategory(category.filter);
               const Icon = category.icon;
 
               return (
                 <div
                   key={category.id}
                   id={category.id}
+                  className="space-y-12"
                 >
                   {/* Category Header */}
-                  <div className="flex items-center gap-4 mb-8">
+                  <div className="flex items-center gap-4">
                     <div className="p-3 bg-golden/10 rounded-lg">
                       <Icon className="w-6 h-6 text-golden" strokeWidth={1.5} />
                     </div>
@@ -196,15 +210,39 @@ const Products = () => {
                       </h2>
                       <p className="text-sm text-muted-foreground mt-1">
                         {categoryProducts.length} {categoryProducts.length === 1 ? 'produto' : 'produtos'}
+                        {collections.length > 1 && ` • ${collections.length} coleções`}
                       </p>
                     </div>
                   </div>
 
-                  {/* Products Carousel/Grid */}
-                  <ProductCarousel
-                    products={categoryProducts}
-                    categoryTitle={category.title}
-                  />
+                  {/* Collections */}
+                  <div className="space-y-10">
+                    {collections.map((collection) => {
+                      const collectionProducts = getProductsByCollection(category.filter, collection);
+                      
+                      return (
+                        <div key={collection || 'sem-colecao'} className="space-y-6">
+                          {/* Collection Title (only if there are multiple collections) */}
+                          {collections.length > 1 && (
+                            <div className="border-l-4 border-golden/30 pl-4">
+                              <h3 className="text-xl md:text-2xl font-semibold text-foreground">
+                                {collection ? `Coleção ${collection}` : 'Outros Produtos'}
+                              </h3>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {collectionProducts.length} {collectionProducts.length === 1 ? 'produto' : 'produtos'}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Products Carousel/Grid */}
+                          <ProductCarousel
+                            products={collectionProducts}
+                            categoryTitle={collection ? `${category.title} - ${collection}` : category.title}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
 
                   {/* Separator */}
                   {index < categories.length - 1 && (
