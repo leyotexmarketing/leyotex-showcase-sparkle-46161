@@ -1,0 +1,21 @@
+-- Atualizar URLs das imagens dos produtos Jogo de Cama Ipanema
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_1_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-1-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_1.png' WHERE slug = 'jogo-de-cama-ipanema-1';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_2_-_casal.png' WHERE slug = 'jogo-de-cama-ipanema-2-casal';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_2_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-2-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_2.png' WHERE slug = 'jogo-de-cama-ipanema-2';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_3_-_Casal.png' WHERE slug = 'jogo-de-cama-ipanema-3-casal';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_3_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-3-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_3.png' WHERE slug = 'jogo-de-cama-ipanema-3';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_4_-_Casal.png' WHERE slug = 'jogo-de-cama-ipanema-4-casal';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_4_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-4-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_4.png' WHERE slug = 'jogo-de-cama-ipanema-4';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_5_-_Casal.png' WHERE slug = 'jogo-de-cama-ipanema-5-casal';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_5_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-5-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_5.png' WHERE slug = 'jogo-de-cama-ipanema-5';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_6_-_casal.png' WHERE slug = 'jogo-de-cama-ipanema-6-casal';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_6_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-6-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_6.png' WHERE slug = 'jogo-de-cama-ipanema-6';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_7_-_solteiro.png' WHERE slug = 'jogo-de-cama-ipanema-7-solteiro';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_7.png' WHERE slug = 'jogo-de-cama-ipanema-7';
+UPDATE products SET image_url = '/images/Jogo_de_Cama_Ipanema_8_-_casal.png' WHERE slug = 'jogo-de-cama-ipanema-8-casal';
