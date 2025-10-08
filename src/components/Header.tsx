@@ -162,20 +162,12 @@ const Header = () => {
                               <li key={item} className="luxury-category-item">
                                 <div className="luxury-gold-dot"></div>
                                 <Link
-                                  to="/produtos"
+                                  to={`/produtos#${category.title.toLowerCase().replace(/\s+/g, '-')}`}
                                   onClick={() => {
                                     setShowMegaMenu(false);
                                     if (closeTimerRef.current) {
                                       clearTimeout(closeTimerRef.current);
                                     }
-                                    // Scroll to category section after navigation
-                                    setTimeout(() => {
-                                      const categoryId = category.title.toLowerCase().replace(/\s+/g, '-');
-                                      const element = document.getElementById(categoryId);
-                                      if (element) {
-                                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                      }
-                                    }, 100);
                                   }}
                                   className="luxury-item-link"
                                 >

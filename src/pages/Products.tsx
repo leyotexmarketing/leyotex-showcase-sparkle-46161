@@ -131,8 +131,7 @@ const Products = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-primary/5 to-background py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 fade-in-up">
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link to="/" className="hover:text-golden transition-colors">
               Início
             </Link>
@@ -141,7 +140,7 @@ const Products = () => {
           </nav>
 
           {/* Title */}
-          <div className="text-center fade-in-up" style={{ animationDelay: '100ms' }}>
+          <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 font-playfair">
               Nossos Produtos
             </h1>
@@ -179,17 +178,12 @@ const Products = () => {
             // Category Sections
             categories.map((category, index) => {
               const categoryProducts = getProductsByCategory(category.filter);
-              
-              if (categoryProducts.length === 0) return null;
-
               const Icon = category.icon;
 
               return (
                 <div
                   key={category.id}
                   id={category.id}
-                  className="fade-in-up"
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Category Header */}
                   <div className="flex items-center gap-4 mb-8">

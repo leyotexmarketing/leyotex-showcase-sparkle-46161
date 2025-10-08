@@ -15,6 +15,17 @@ interface ProductCarouselProps {
 }
 
 const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTitle }) => {
+  const hasProducts = products && products.length > 0;
+
+  // Placeholder list to keep layout stable when empty
+  const placeholderItems = Array.from({ length: 4 }, (_, i) => ({
+    id: `placeholder-${categoryTitle}-${i}`,
+    name: 'Em breve',
+    image_url: null,
+  })) as unknown as Product[];
+
+  const renderList = hasProducts ? products : placeholderItems;
+
   return (
     <div className="w-full">
       {/* Desktop: Carousel */}
@@ -27,17 +38,17 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
           className="w-full"
         >
           <CarouselContent className="-ml-4">
-            {products.map((product) => (
-              <CarouselItem key={product.id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+            {renderList.map((product) => (
+              <CarouselItem key={(product as any).id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                 <ProductCard
                   name={product.name}
                   category={categoryTitle}
-                  imageUrl={product.image_url}
+                  imageUrl={(product as any).image_url}
                 />
               </CarouselItem>
             ))}
           </CarouselContent>
-          {products.length > 4 && (
+          {renderList.length > 4 && (
             <>
               <CarouselPrevious className="left-0 -translate-x-12" />
               <CarouselNext className="right-0 translate-x-12" />
@@ -48,12 +59,12 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
 
       {/* Mobile: Compact 2-column Grid */}
       <div className="md:hidden grid grid-cols-2 gap-3">
-        {products.map((product) => (
+        {renderList.map((product) => (
           <ProductCard
-            key={product.id}
+            key={(product as any).id}
             name={product.name}
             category={categoryTitle}
-            imageUrl={product.image_url}
+            imageUrl={(product as any).image_url}
           />
         ))}
       </div>
@@ -62,3 +73,4 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
 };
 
 export default ProductCarousel;
+

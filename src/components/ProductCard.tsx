@@ -9,7 +9,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl }) => {
   return (
-    <div className="group bg-card rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden">
+    <div className="group bg-card border border-border rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden">
       {/* Image Placeholder */}
       <div className="relative aspect-[3/4] bg-muted overflow-hidden">
         {imageUrl ? (
