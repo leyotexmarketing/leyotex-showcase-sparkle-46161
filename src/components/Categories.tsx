@@ -77,23 +77,13 @@ const Categories = () => {
         </div>
 
         {/* Unified Categories Grid - 5 items: 3 on top, 2 on bottom centered */}
-        <div className="frette-categories-grid" style={{ 
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gridTemplateRows: 'repeat(2, minmax(400px, 1fr))',
-          gap: '20px',
-          maxWidth: '1400px',
-          margin: '0 auto'
-        }}>
+        <div className="frette-categories-grid">
           {categories.map((category, index) => (
             <div
               key={category.name}
               className="frette-category-card group"
               onClick={() => handleCategoryClick(category.name)}
-              style={index >= 3 ? { 
-                gridColumn: index === 3 ? '1 / 3' : '3 / 4',
-                gridRow: '2'
-              } : {}}
+              data-index={index}
             >
               {/* Background Image */}
               <div className="frette-image-container">

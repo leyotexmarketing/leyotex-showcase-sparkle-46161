@@ -152,6 +152,8 @@ All colors MUST be HSL. Golden accents for premium feel.
     grid-template-rows: repeat(2, minmax(400px, 1fr));
     gap: 20px;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
   .frette-category-card {
@@ -160,6 +162,17 @@ All colors MUST be HSL. Golden accents for premium feel.
     overflow: hidden;
     border-radius: 0;
     transition: opacity 0.3s ease;
+  }
+  
+  /* Desktop grid positioning for 3-2 layout */
+  .frette-category-card[data-index="3"] {
+    grid-column: 1 / 3;
+    grid-row: 2;
+  }
+  
+  .frette-category-card[data-index="4"] {
+    grid-column: 3 / 4;
+    grid-row: 2;
   }
 
   /* Dim other cards when one is hovered */
@@ -534,13 +547,15 @@ All colors MUST be HSL. Golden accents for premium feel.
   /* Responsive adjustments */
   @media (max-width: 1024px) {
     .frette-categories-grid {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: minmax(300px, auto) minmax(300px, auto) minmax(300px, auto);
-      gap: 1rem;
+      grid-template-columns: repeat(2, 1fr) !important;
+      grid-template-rows: minmax(300px, auto) minmax(300px, auto) minmax(300px, auto) !important;
+      gap: 1rem !important;
     }
 
     .frette-category-card {
       aspect-ratio: 3/4;
+      grid-column: auto !important;
+      grid-row: auto !important;
     }
 
     .frette-image-container img {
@@ -555,40 +570,49 @@ All colors MUST be HSL. Golden accents for premium feel.
 
   @media (max-width: 768px) {
     .frette-categories-grid {
-      grid-template-columns: 1fr;
-      grid-template-rows: repeat(5, minmax(240px, auto));
-      gap: 10px;
+      grid-template-columns: 1fr !important;
+      grid-template-rows: repeat(5, minmax(280px, auto)) !important;
+      gap: 16px !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
     }
 
     .frette-category-card {
-      aspect-ratio: 4/5;
+      aspect-ratio: 16/9 !important;
+      grid-column: auto !important;
+      grid-row: auto !important;
+      min-height: 280px;
     }
 
     .frette-image-container img {
       object-position: center center;
+      object-fit: cover;
     }
     
     .frette-text-container,
     .frette-normal-text,
     .frette-hover-text {
-      padding: 16px;
+      padding: 20px;
     }
     
     .frette-title {
-      font-size: 20px;
-      line-height: 1.1;
-      margin-bottom: 4px;
+      font-size: 22px;
+      line-height: 1.2;
+      margin-bottom: 6px;
       letter-spacing: 0.5px;
+      font-weight: 600;
     }
     
     .frette-description {
-      font-size: 12px;
-      line-height: 1.3;
-      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      opacity: 0.95;
     }
     
     .frette-link {
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: 500;
     }
     
     .luxury-mega-menu .grid {
