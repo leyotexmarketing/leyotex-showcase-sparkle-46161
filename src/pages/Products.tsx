@@ -28,6 +28,8 @@ const Products = () => {
 
       if (error) throw error;
       setProducts(data || []);
+      console.log('Products loaded:', data?.length, 'products');
+      console.log('Categories found:', [...new Set(data?.map(p => p.category))]);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({
@@ -79,7 +81,9 @@ const Products = () => {
   ];
 
   const getProductsByCategory = (categoryFilter: string) => {
-    return products.filter(p => p.category === categoryFilter);
+    const filtered = products.filter(p => p.category === categoryFilter);
+    console.log(`Category ${categoryFilter}: ${filtered.length} products`);
+    return filtered;
   };
 
   return (
