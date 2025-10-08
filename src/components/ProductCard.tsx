@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl }) =
         )}
         
         {/* Category Badge */}
-        <div className="absolute top-3 right-3 bg-golden/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium">
+        <div className="absolute top-3 right-3 bg-golden/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium md:px-3 md:py-1 px-2 py-0.5 text-[10px] md:text-xs whitespace-nowrap overflow-hidden text-ellipsis max-w-[calc(100%-1.5rem)]">
           {category}
         </div>
       </div>

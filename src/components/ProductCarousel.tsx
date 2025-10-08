@@ -57,16 +57,33 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
         </Carousel>
       </div>
 
-      {/* Mobile: Compact 2-column Grid */}
-      <div className="md:hidden grid grid-cols-2 gap-3">
-        {renderList.map((product) => (
-          <ProductCard
-            key={(product as any).id}
-            name={product.name}
-            category={categoryTitle}
-            imageUrl={(product as any).image_url}
-          />
-        ))}
+      {/* Mobile: Carousel with 2 items per view */}
+      <div className="md:hidden">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2">
+            {renderList.map((product) => (
+              <CarouselItem key={(product as any).id} className="pl-2 basis-1/2">
+                <ProductCard
+                  name={product.name}
+                  category={categoryTitle}
+                  imageUrl={(product as any).image_url}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {renderList.length > 2 && (
+            <>
+              <CarouselPrevious className="left-0 -translate-x-8 h-8 w-8" />
+              <CarouselNext className="right-0 translate-x-8 h-8 w-8" />
+            </>
+          )}
+        </Carousel>
       </div>
     </div>
   );
