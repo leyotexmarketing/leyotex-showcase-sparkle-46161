@@ -158,22 +158,29 @@ const Header = () => {
                           </div>
                           
                           <ul className="space-y-3 mt-4">
-                            {category.items.map((item, itemIndex) => (
+                             {category.items.map((item, itemIndex) => (
                               <li key={item} className="luxury-category-item">
                                 <div className="luxury-gold-dot"></div>
-                                 <a
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    toast({
-                                      title: `Categoria: ${item}`,
-                                      description: "Navegação em desenvolvimento",
-                                    });
+                                <Link
+                                  to="/produtos"
+                                  onClick={() => {
+                                    setShowMegaMenu(false);
+                                    if (closeTimerRef.current) {
+                                      clearTimeout(closeTimerRef.current);
+                                    }
+                                    // Scroll to category section after navigation
+                                    setTimeout(() => {
+                                      const categoryId = category.title.toLowerCase().replace(/\s+/g, '-');
+                                      const element = document.getElementById(categoryId);
+                                      if (element) {
+                                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                      }
+                                    }, 100);
                                   }}
                                   className="luxury-item-link"
                                 >
                                   {item}
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -203,6 +210,18 @@ const Header = () => {
               }`}
             >
               Sobre
+            </Link>
+
+            {/* Produtos Link */}
+            <Link
+              to="/produtos"
+              className={`font-medium transition-colors duration-200 ${
+                location.pathname === '/produtos' 
+                  ? 'text-golden' 
+                  : 'text-primary hover:text-golden'
+              }`}
+            >
+              Produtos
             </Link>
 
             {/* Contato Link */}
