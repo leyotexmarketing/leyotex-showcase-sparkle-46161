@@ -159,7 +159,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, col
         {isClient ? (
           <Button
             onClick={handleComprarClick}
-            className="w-full bg-success hover:bg-success/90 text-white text-sm py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md"
+            className="w-full bg-golden hover:bg-golden-dark text-white text-sm py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md"
             size="sm"
           >
             Comprar
