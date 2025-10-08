@@ -213,7 +213,7 @@ const AdminPanel = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ScrollArea className="h-[500px]">
+                <ScrollArea className="h-[300px] md:h-[500px]">
                   <div className="space-y-2">
                     {newsletters.map((sub) => (
                       <div
