@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu } from 'lucide-react';
+import { Search, User, Heart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu, Home, FolderOpen, Info, Package, Phone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -218,20 +218,22 @@ const Header = () => {
                 <nav className="space-y-1">
                   <button
                     onClick={() => handleMobileNavClick('/')}
-                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                       location.pathname === '/' 
                         ? 'bg-golden/10 text-golden' 
                         : 'text-primary hover:bg-background-soft'
                     }`}
                   >
-                    🏠 Início
+                    <Home className="w-4 h-4" />
+                    Início
                   </button>
 
                   {/* Categories Accordion */}
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="categories" className="border-none">
-                      <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-background-soft rounded-lg font-medium text-primary">
-                        📂 Categorias
+                      <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-background-soft rounded-lg font-medium text-primary flex items-center gap-2">
+                        <FolderOpen className="w-4 h-4" />
+                        Categorias
                       </AccordionTrigger>
                       <AccordionContent className="pb-0">
                         <div className="space-y-1 pl-4 mt-2">
@@ -253,35 +255,38 @@ const Header = () => {
 
                   <button
                     onClick={() => handleMobileNavClick('/sobre')}
-                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                       location.pathname === '/sobre' 
                         ? 'bg-golden/10 text-golden' 
                         : 'text-primary hover:bg-background-soft'
                     }`}
                   >
-                    ℹ️ Sobre
+                    <Info className="w-4 h-4" />
+                    Sobre
                   </button>
 
                   <button
                     onClick={() => handleMobileNavClick('/produtos')}
-                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                       location.pathname === '/produtos' 
                         ? 'bg-golden/10 text-golden' 
                         : 'text-primary hover:bg-background-soft'
                     }`}
                   >
-                    📦 Produtos
+                    <Package className="w-4 h-4" />
+                    Produtos
                   </button>
 
                   <button
                     onClick={() => handleMobileNavClick('/contato')}
-                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                       location.pathname === '/contato' 
                         ? 'bg-golden/10 text-golden' 
                         : 'text-primary hover:bg-background-soft'
                     }`}
                   >
-                    📞 Contato
+                    <Phone className="w-4 h-4" />
+                    Contato
                   </button>
                 </nav>
               </div>
@@ -310,15 +315,6 @@ const Header = () => {
               className="text-primary hover:text-golden transition-colors"
             >
               <Heart className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={() => handleIconClick('Carrinho')}
-              className="relative text-primary hover:text-golden transition-colors"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-golden text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                3
-              </span>
             </button>
           </div>
         </div>
@@ -502,15 +498,6 @@ const Header = () => {
               className="text-primary hover:text-golden transition-colors duration-200"
             >
               <Heart className="w-6 h-6" />
-            </button>
-            <button 
-              onClick={() => handleIconClick('Carrinho')}
-              className="relative text-primary hover:text-golden transition-colors duration-200"
-            >
-              <ShoppingCart className="w-6 h-6" />
-              <span className="absolute -top-2 -right-2 bg-golden text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                3
-              </span>
             </button>
           </div>
         </div>
