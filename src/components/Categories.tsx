@@ -1,8 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 const Categories = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
+
+  const categoryIdMap: Record<string, string> = {
+    'Colchas': 'colchas',
+    'Edredons': 'edredons',
+    'Jogos de Cama': 'jogos-de-cama',
+    'Coberdroms': 'coberdroms',
+    'Travesseiros': 'travesseiros'
+  };
 
   const categories = [
     {
@@ -48,10 +58,10 @@ const Categories = () => {
   ];
 
   const handleCategoryClick = (categoryName: string) => {
-    toast({
-      title: `Categoria ${categoryName}`,
-      description: "Navegação em desenvolvimento",
-    });
+    const categoryId = categoryIdMap[categoryName];
+    if (categoryId) {
+      navigate(`/produtos#${categoryId}`);
+    }
   };
 
   return (

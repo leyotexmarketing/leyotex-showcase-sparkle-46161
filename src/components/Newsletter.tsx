@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Check } from 'lucide-react';
+import { Mail, Check, Bell, Tag, Lightbulb } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Newsletter = () => {
@@ -25,37 +25,17 @@ const Newsletter = () => {
 
   const benefits = [
     {
-      icon: (
-        <div className="w-12 h-12 bg-golden/20 rounded-full flex items-center justify-center">
-          <div className="w-6 h-6 border-2 border-golden rounded-full relative">
-            <div className="absolute top-1 left-1 w-2 h-2 bg-golden rounded-full"></div>
-          </div>
-        </div>
-      ),
+      icon: Bell,
       title: "Novidades em Primeira Mão",
       description: "Seja o primeiro a conhecer nossos lançamentos"
     },
     {
-      icon: (
-        <div className="w-12 h-12 bg-golden/20 rounded-full flex items-center justify-center">
-          <div className="w-6 h-6 relative">
-            <div className="w-4 h-4 bg-golden transform rotate-45"></div>
-            <div className="absolute top-1 left-1 w-2 h-2 bg-white"></div>
-          </div>
-        </div>
-      ),
+      icon: Tag,
       title: "Promoções Exclusivas", 
       description: "Descontos especiais só para assinantes"
     },
     {
-      icon: (
-        <div className="w-12 h-12 bg-golden/20 rounded-full flex items-center justify-center">
-          <div className="w-6 h-6 relative">
-            <div className="w-3 h-5 border-2 border-golden rounded-t-full"></div>
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-golden rounded-full"></div>
-          </div>
-        </div>
-      ),
+      icon: Lightbulb,
       title: "Dicas de Decoração",
       description: "Conteúdo exclusivo para sua casa"
     }
@@ -118,23 +98,26 @@ const Newsletter = () => {
 
           {/* Benefits */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in-up justify-items-center" style={{ animationDelay: '400ms' }}>
-            {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="text-center group max-w-sm"
-                style={{ animationDelay: `${600 + index * 100}ms` }}
-              >
-                <div className="mb-4 group-hover:scale-110 transition-transform duration-300 mx-auto flex justify-center">
-                  {benefit.icon}
+            {benefits.map((benefit, index) => {
+              const IconComponent = benefit.icon;
+              return (
+                <div
+                  key={index}
+                  className="text-center group max-w-sm"
+                  style={{ animationDelay: `${600 + index * 100}ms` }}
+                >
+                  <div className="w-16 h-16 bg-golden/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-golden/20 transition-all duration-300">
+                    <IconComponent className="w-8 h-8 text-golden" />
+                  </div>
+                  <h3 className="font-bold text-primary mb-2 group-hover:text-golden transition-colors duration-200">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {benefit.description}
+                  </p>
                 </div>
-                <h3 className="font-bold text-primary mb-2 group-hover:text-golden transition-colors duration-200">
-                  {benefit.title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {benefit.description}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
