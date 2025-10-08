@@ -218,13 +218,13 @@ const AdminPanel = () => {
                     {newsletters.map((sub) => (
                       <div
                         key={sub.id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
+                        className="flex items-center justify-between p-2 md:p-3 border rounded-lg gap-2"
                       >
-                        <div className="flex items-center gap-3">
-                          <Mail className="w-4 h-4 text-muted-foreground" />
-                          <span>{sub.email}</span>
+                        <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                          <Mail className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-sm md:text-base truncate">{sub.email}</span>
                         </div>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-xs md:text-sm text-muted-foreground flex-shrink-0">
                           {new Date(sub.subscribed_at).toLocaleDateString('pt-BR')}
                         </span>
                       </div>
