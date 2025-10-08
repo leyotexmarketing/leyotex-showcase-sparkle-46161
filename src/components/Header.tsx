@@ -25,7 +25,7 @@ const Header = () => {
     {
       title: "JOGOS DE CAMA",
       icon: LayoutGrid,
-      itemCount: 66,
+      itemCount: 65,
       items: ["Linha Buzios", "Linha Ipanema", "Linha Milão", "Coleção Completa", "Lançamentos ✨", "Promoções"]
     },
     {
