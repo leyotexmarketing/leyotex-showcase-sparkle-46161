@@ -75,6 +75,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, col
     });
   }, [category, collection]);
 
+  useEffect(() => {
+    console.log('🔍 ProductCard Debug:', {
+      name,
+      isClient,
+      price,
+      showPrice: isClient && price,
+      buttonText: isClient ? 'Comprar' : 'Solicitar'
+    });
+  }, [name, isClient, price]);
+
   const handleSolicitarClick = () => {
     navigate('/contato#vamos-conversar');
     setTimeout(() => {
