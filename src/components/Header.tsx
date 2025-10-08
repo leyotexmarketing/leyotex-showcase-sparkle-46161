@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, User, Heart, ShoppingCart, ChevronDown, Droplets, Bed, Baby, Star, Sparkles } from 'lucide-react';
+import { Search, User, Heart, ShoppingCart, ChevronDown, Bed, Sofa, Shirt, UtensilsCrossed, Baby, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -10,28 +10,34 @@ const Header = () => {
 
   const categories = [
     {
-      title: "BANHO",
-      icon: Droplets,
-      itemCount: 6,
-      items: ["Toalhas de Banho", "Toalhas de Rosto", "Roupões", "Tapetes", "Kits", "Toalhas de Praia"]
-    },
-    {
-      title: "CAMA",
+      title: "COLCHAS",
       icon: Bed,
-      itemCount: 6,
-      items: ["Lençóis", "Edredons", "Travesseiros", "Capas de Almofada", "Jogos de Cama", "Colchas"]
+      itemCount: 18,
+      items: ["Colcha Nina", "Colcha Nina Cetim", "Colcha Roma", "Coleção Completa", "Lançamentos", "Promoções"]
     },
     {
-      title: "BABY & KIDS",
+      title: "EDREDONS",
+      icon: Sofa,
+      itemCount: 12,
+      items: ["Edredom Casal", "Edredom Solteiro", "Coleção Completa", "Lançamentos", "Promoções", "Conjuntos"]
+    },
+    {
+      title: "JOGOS DE CAMA",
+      icon: Shirt,
+      itemCount: 66,
+      items: ["Linha Buzios", "Linha Ipanema", "Linha Milão", "Coleção Completa", "Lançamentos ✨", "Promoções"]
+    },
+    {
+      title: "COBERDROMS",
+      icon: UtensilsCrossed,
+      itemCount: 6,
+      items: ["Coberdrom Belissima", "Coleção Completa", "Lançamentos", "Promoções", "Conjuntos ✨", "Kits"]
+    },
+    {
+      title: "TRAVESSEIROS",
       icon: Baby,
-      itemCount: 6,
-      items: ["Enxoval", "Toalhas Infantis", "Edredons Kids", "Jogos de Berço", "Personagens", "Mosquiteiros"]
-    },
-    {
-      title: "LINHA ESPECIAL",
-      icon: Star,
-      itemCount: 6,
-      items: ["Hotelaria", "Hospitalar", "Artesanato", "Atacado B2B", "Personalização ✨", "Linha Pet ✨"]
+      itemCount: 8,
+      items: ["Travesseiro Alvorada", "Travesseiro Bom Sono", "Travesseiro Delicata", "Travesseiro Nuvare", "Coleção Completa ✨", "Promoções"]
     }
   ];
 
@@ -113,12 +119,12 @@ const Header = () => {
                     <div className="luxury-seasonal-banner">
                       <div className="shimmer-effect"></div>
                       <Sparkles className="w-4 h-4 text-golden-dark animate-pulse" />
-                      <span>Coleção Verão 2025 - Até 30% OFF</span>
+                      <span>Coleção 2025 - Conforto e Elegância</span>
                       <Sparkles className="w-4 h-4 text-golden-dark animate-pulse" />
                     </div>
 
-                    {/* Categories Grid */}
-                    <div className="grid grid-cols-4 gap-10 pt-8">
+                    {/* Categories Grid - 5 columns */}
+                    <div className="grid grid-cols-5 gap-8 pt-8">
                       {categories.map((category, index) => (
                         <div 
                           key={category.title} 
@@ -152,11 +158,11 @@ const Header = () => {
                                   className="luxury-item-link"
                                 >
                                   {item}
-                                  {(item.includes('Personalização') || item.includes('Linha Pet')) && (
+                                  {item.includes('✨') && (
                                     <span className="luxury-new-badge">NEW</span>
                                   )}
-                                  {itemIndex === 0 && (
-                                    <span className="luxury-sale-badge">SALE</span>
+                                  {itemIndex === 0 && category.items.length > 3 && (
+                                    <span className="luxury-sale-badge">TOP</span>
                                   )}
                                 </a>
                               </li>

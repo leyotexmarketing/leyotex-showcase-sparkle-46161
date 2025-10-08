@@ -1,84 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Product } from '@/types/product';
+import { Loader2 } from 'lucide-react';
 
 const Products = () => {
   const { toast } = useToast();
-  const [selectedColors, setSelectedColors] = useState<{[key: number]: string}>({});
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [displayCount, setDisplayCount] = useState(8);
 
-  const products = [
-    {
-      id: 1,
-      name: "Toalha Premium Cotton",
-      price: "R$ 89,90",
-      image: "/images/toalha-premium-cotton.jpg",
-      colors: ["#000000", "#FFFFFF", "#8B7355", "#E5E5E5"]
-    },
-    {
-      id: 2,
-      name: "Jogo de Lençol Luxo",
-      price: "R$ 249,90",
-      image: "/images/jogo-lencol-luxo.jpg",
-      colors: ["#2C4F7C", "#FFFFFF", "#F5DEB3", "#E6E6FA"]
-    },
-    {
-      id: 3,
-      name: "Edredom Confort Plus",
-      price: "R$ 189,90",
-      image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=400&fit=crop",
-      colors: ["#E6E6FA", "#FFFFFF", "#FFE4E1"]
-    },
-    {
-      id: 4,
-      name: "Almofada Decorativa",
-      price: "R$ 59,90",
-      image: "/images/almofada-decorativa.jpg",
-      colors: ["#556B2F", "#D4A574", "#000000", "#8B0000"]
-    },
-    {
-      id: 5,
-      name: "Toalha de Mesa Elegance",
-      price: "R$ 129,90",
-      image: "/images/toalha-mesa-elegance.jpg",
-      colors: ["#FFFFFF", "#E5E5E5", "#2C4F7C"]
-    },
-    {
-      id: 6,
-      name: "Cortina Blackout Premium",
-      price: "R$ 199,90",
-      image: "/images/cortina-blackout-premium.jpg",
-      colors: ["#000000", "#8B7355", "#FFFFFF"]
-    },
-    {
-      id: 7,
-      name: "Travesseiro Ortopédico Luxo",
-      price: "R$ 169,90",
-      image: "/images/travesseiro-ortopedico-luxo.jpg",
-      colors: ["#FFFFFF", "#F0F8FF"]
-    },
-    {
-      id: 8,
-      name: "Travesseiro Memory Foam Premium",
-      price: "R$ 119,90",
-      image: "/images/travesseiro-memory-foam-premium.jpg",
-      colors: ["#FFFFFF", "#E5E5E5", "#F5F5F5"]
-    }
-  ];
-
-  // Initialize selected colors with first color of each product
-  React.useEffect(() => {
-    const initialColors: {[key: number]: string} = {};
-    products.forEach(product => {
-      initialColors[product.id] = product.colors[0];
-    });
-    setSelectedColors(initialColors);
+  useEffect(() => {
+    fetchProducts();
   }, []);
 
-  const handleColorSelect = (productId: number, color: string) => {
-    setSelectedColors(prev => ({
-      ...prev,
-      [productId]: color
-    }));
-    console.log(`Product ${productId} - Color selected: ${color}`);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast({
+        title: "Erro ao carregar produtos",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddToCart = (productName: string) => {
@@ -88,6 +43,35 @@ const Products = () => {
     });
   };
 
+  const loadMore = () => {
+    setDisplayCount(prev => prev + 8);
+  };
+
+  const getPlaceholderImage = (category: string) => {
+    const placeholders: Record<string, string> = {
+      'colcha': 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400&h=400&fit=crop',
+      'edredom': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=400&fit=crop',
+      'jogo-de-cama': 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop',
+      'coberdrom': 'https://images.unsplash.com/photo-1631049035182-249067d7618e?w=400&h=400&fit=crop',
+      'travesseiro': 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&h=400&fit=crop',
+    };
+    return placeholders[category] || 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400&h=400&fit=crop';
+  };
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <Loader2 className="w-12 h-12 animate-spin text-golden" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const displayedProducts = products.slice(0, displayCount);
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -96,12 +80,12 @@ const Products = () => {
             Produtos em Destaque
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Descubra nossa seleção especial de produtos premium para sua casa
+            Descubra nossa seleção de {products.length} produtos premium para sua casa
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
+          {displayedProducts.map((product, index) => (
             <div
               key={product.id}
               className="group bg-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden fade-in-up"
@@ -110,61 +94,56 @@ const Products = () => {
               {/* Product Image */}
               <div className="relative overflow-hidden">
                 <img
-                  src={product.image}
+                  src={product.image_url || getPlaceholderImage(product.category)}
                   alt={product.name}
                   className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {product.collection && (
+                  <div className="absolute top-4 right-4 bg-golden/90 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {product.collection}
+                  </div>
+                )}
               </div>
 
               {/* Product Info */}
               <div className="p-6">
-                <h3 className="font-bold text-primary mb-2 group-hover:text-golden transition-colors duration-200">
+                <h3 className="font-bold text-primary mb-2 group-hover:text-golden transition-colors duration-200 line-clamp-2">
                   {product.name}
                 </h3>
                 
-                <p className="text-2xl font-bold text-golden mb-4">
-                  {product.price}
-                </p>
-
-                {/* Color Options */}
-                <div className="flex space-x-2 mb-6">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => handleColorSelect(product.id, color)}
-                      className={`color-dot ${
-                        selectedColors[product.id] === color ? 'selected' : ''
-                      }`}
-                      style={{ backgroundColor: color }}
-                      title={`Selecionar cor ${color}`}
-                    />
-                  ))}
-                </div>
+                {product.size && (
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Tamanho: {product.size}
+                  </p>
+                )}
 
                 {/* Add to Cart Button */}
                 <button
                   onClick={() => handleAddToCart(product.name)}
                   className="w-full btn-golden hover:shadow-golden transform hover:scale-105 transition-all duration-200"
                 >
-                  Adicionar ao Carrinho
+                  Consultar Disponibilidade
                 </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* View More Button */}
+        {/* Load More / View All Button */}
         <div className="text-center mt-12">
-          <button 
-            onClick={() => toast({
-              title: "Ver mais produtos",
-              description: "Funcionalidade em desenvolvimento",
-            })}
-            className="btn-outline-golden px-8 py-4 text-lg hover:shadow-golden"
-          >
-            Ver Todos os Produtos
-          </button>
+          {displayCount < products.length ? (
+            <button 
+              onClick={loadMore}
+              className="btn-outline-golden px-8 py-4 text-lg hover:shadow-golden"
+            >
+              Carregar Mais Produtos ({products.length - displayCount} restantes)
+            </button>
+          ) : products.length > 8 && (
+            <p className="text-muted-foreground">
+              Mostrando todos os {products.length} produtos
+            </p>
+          )}
         </div>
       </div>
     </section>

@@ -6,36 +6,44 @@ const Categories = () => {
 
   const categories = [
     {
-      name: "Banho",
-      image: "/images/banho-luxury-bathroom.jpg",
-      description: "Toalhas premium e acessórios",
-      hoverTitle: "Envolva-se em Texturas",
-      hoverDescription: "Descubra nossa linha de toalhas premium em novas cores",
-      shopText: "Shop Banho"
+      name: "Colchas",
+      image: "/images/jogo-lencol-luxo.jpg",
+      description: "Elegância e praticidade",
+      hoverTitle: "Colchas Premium",
+      hoverDescription: "18 modelos exclusivos para sua cama",
+      shopText: "Ver Colchas"
     },
     {
-      name: "Cama",
-      image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop", 
-      description: "Lençóis e edredons de luxo",
-      hoverTitle: "Eleve Seu Descanso",
-      hoverDescription: "Onde técnicas seculares encontram o conforto moderno",
-      shopText: "Shop Cama"
+      name: "Edredons",
+      image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop", 
+      description: "Conforto e caimento perfeito",
+      hoverTitle: "Edredons de Luxo",
+      hoverDescription: "12 modelos em Casal e Solteiro",
+      shopText: "Ver Edredons"
     },
     {
-      name: "Baby & Kids",
-      image: "/images/baby-kids-nursery.jpg",
-      description: "Conforto e segurança infantil",
-      hoverTitle: "Primeiros Sonhos",
-      hoverDescription: "Conforto e segurança para os pequenos",
-      shopText: "Shop Baby & Kids"
+      name: "Jogos de Cama",
+      image: "/images/jogo-lencol-luxo.jpg",
+      description: "Conjunto confortável para o dia a dia",
+      hoverTitle: "Jogos de Cama",
+      hoverDescription: "66 modelos nas linhas Buzios, Ipanema e Milão",
+      shopText: "Ver Jogos de Cama"
     },
     {
-      name: "Linha Especial",
-      image: "https://images.unsplash.com/photo-1571508601891-ca5e7a713859?w=400&h=300&fit=crop",
-      description: "Soluções profissionais",
-      hoverTitle: "Coleções Exclusivas",
-      hoverDescription: "Soluções personalizadas para projetos exclusivos",
-      shopText: "Shop Linha Especial"
+      name: "Coberdroms",
+      image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=400&h=300&fit=crop",
+      description: "Aconchego e estilo",
+      hoverTitle: "Coberdroms Belissima",
+      hoverDescription: "6 modelos versáteis para todas as estações",
+      shopText: "Ver Coberdroms"
+    },
+    {
+      name: "Travesseiros",
+      image: "/images/travesseiro-memory-foam-premium.jpg",
+      description: "Suporte e maciez",
+      hoverTitle: "Travesseiros Premium",
+      hoverDescription: "8 modelos para noites mais confortáveis",
+      shopText: "Ver Travesseiros"
     }
   ];
 
@@ -58,9 +66,60 @@ const Categories = () => {
           </p>
         </div>
 
-        {/* Categories Grid - 2 rows x 3 columns */}
-        <div className="frette-categories-grid">
-          {categories.map((category, index) => (
+        {/* Categories Grid - Adjusted for 5 items: 3 on top row, 2 on bottom */}
+        <div className="frette-categories-grid" style={{ 
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          maxWidth: '1400px',
+          margin: '0 auto'
+        }}>
+          {categories.slice(0, 3).map((category) => (
+            <div
+              key={category.name}
+              className="frette-category-card group"
+              onClick={() => handleCategoryClick(category.name)}
+            >
+              {/* Background Image */}
+              <div className="frette-image-container">
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="frette-background-image"
+                />
+                
+                {/* Normal State Overlay */}
+                <div className="frette-normal-overlay" />
+                
+                {/* Hover State Overlay */}
+                <div className="frette-hover-overlay" />
+              </div>
+
+              {/* Text Content */}
+              <div className="frette-text-container">
+                {/* Normal State Text */}
+                <div className="frette-normal-text">
+                  <h3 className="frette-title">{category.name}</h3>
+                  <p className="frette-description">{category.description}</p>
+                  <span className="frette-link">Explorar</span>
+                </div>
+
+                {/* Hover State Text */}
+                <div className="frette-hover-text">
+                  <h3 className="frette-title">{category.hoverTitle}</h3>
+                  <p className="frette-description">{category.hoverDescription}</p>
+                  <span className="frette-link">{category.shopText} →</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Second Row - Centered 2 items */}
+        <div className="frette-categories-grid mt-6" style={{ 
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          maxWidth: '920px',
+          margin: '24px auto 0'
+        }}>
+          {categories.slice(3).map((category) => (
             <div
               key={category.name}
               className="frette-category-card group"
