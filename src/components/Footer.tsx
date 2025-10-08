@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Youtube, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -25,25 +26,22 @@ const Footer = () => {
 
   const footerLinks = {
     institucional: [
-      { name: "Sobre a Leyotex", href: "#" },
-      { name: "Nossa História", href: "#" },
-      { name: "Trabalhe Conosco", href: "#" },
-      { name: "Responsabilidade Social", href: "#" },
+      { name: "Sobre a Leyotex", href: "/sobre" },
+      { name: "Responsabilidade Social", href: "/sobre" },
       { name: "Política de Privacidade", href: "#" }
     ],
     atendimento: [
       { name: "Central de Ajuda", href: "#" },
-      { name: "Fale Conosco", href: "#" },
+      { name: "Fale Conosco", href: "/contato" },
       { name: "Trocas e Devoluções", href: "#" },
-      { name: "Rastreamento", href: "#" },
       { name: "Garantias", href: "#" }
     ],
     categorias: [
-      { name: "Cama", href: "#" },
-      { name: "Banho", href: "#" },
-      { name: "Mesa", href: "#" },
-      { name: "Decoração", href: "#" },
-      { name: "Baby & Kids", href: "#" }
+      { name: "Colchas", href: "/produtos#colchas" },
+      { name: "Edredons", href: "/produtos#edredons" },
+      { name: "Jogos de Cama", href: "/produtos#jogos-de-cama" },
+      { name: "Coberdroms", href: "/produtos#coberdroms" },
+      { name: "Travesseiros", href: "/produtos#travesseiros" }
     ]
   };
 
@@ -104,19 +102,28 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.institucional.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toast({
-                        title: link.name,
-                        description: "Link em desenvolvimento",
-                      });
-                    }}
-                    className="text-gray-300 hover:text-golden transition-colors duration-200 text-sm"
-                  >
-                    {link.name}
-                  </a>
+                  {link.href === "#" ? (
+                    <a
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toast({
+                          title: link.name,
+                          description: "Em breve disponível",
+                        });
+                      }}
+                      className="text-gray-300 hover:text-golden transition-colors duration-200 text-sm"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-golden transition-colors duration-200 text-sm"
+                    >
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -128,19 +135,28 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.atendimento.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toast({
-                        title: link.name,
-                        description: "Link em desenvolvimento",
-                      });
-                    }}
-                    className="text-gray-300 hover:text-golden transition-colors duration-200 text-sm"
-                  >
-                    {link.name}
-                  </a>
+                  {link.href === "#" ? (
+                    <a
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toast({
+                          title: link.name,
+                          description: "Em breve disponível",
+                        });
+                      }}
+                      className="text-gray-300 hover:text-golden transition-colors duration-200 text-sm"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.href}
+                      className="text-gray-300 hover:text-golden transition-colors duration-200 text-sm"
+                    >
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -180,20 +196,13 @@ const Footer = () => {
               <h4 className="font-medium text-white mb-3">Categorias</h4>
               <div className="grid grid-cols-2 gap-2">
                 {footerLinks.categorias.map((link) => (
-                  <a
+                  <Link
                     key={link.name}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toast({
-                        title: link.name,
-                        description: "Categoria em desenvolvimento",
-                      });
-                    }}
+                    to={link.href}
                     className="text-gray-400 hover:text-golden transition-colors duration-200 text-xs"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
