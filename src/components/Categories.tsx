@@ -17,40 +17,40 @@ const Categories = () => {
   const categories = [
     {
       name: "Colchas",
-      image: "/images/jogo-lencol-luxo.jpg",
-      description: "Elegância e praticidade",
+      image: "/images/Colcha_Roma_1.png",
+      description: "Equilíbrio entre leveza, aconchego e sofisticação.",
       hoverTitle: "Colchas Premium",
       hoverDescription: "18 modelos exclusivos para sua cama",
       shopText: "Ver Colchas"
     },
     {
       name: "Edredons",
-      image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop", 
-      description: "Conforto e caimento perfeito",
+      image: "/images/Edredom_casal_1.png",
+      description: "Equilíbrio entre leveza, aconchego e sofisticação.",
       hoverTitle: "Edredons de Luxo",
       hoverDescription: "12 modelos em Casal e Solteiro",
       shopText: "Ver Edredons"
     },
     {
       name: "Jogos de Cama",
-      image: "/images/jogo-lencol-luxo.jpg",
-      description: "Conjunto confortável para o dia a dia",
+      image: "/images/Jogo_de_Cama_Ipanema_1.png",
+      description: "Design atualizado, toque suave e alta durabilidade.",
       hoverTitle: "Jogos de Cama",
       hoverDescription: "66 modelos nas linhas Buzios, Ipanema e Milão",
       shopText: "Ver Jogos de Cama"
     },
     {
       name: "Coberdroms",
-      image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=400&h=300&fit=crop",
-      description: "Aconchego e estilo",
+      image: "/images/Coberdrom_Belissima_1.png",
+      description: "Tecnologia e conforto térmico com acabamento de alto padrão.",
       hoverTitle: "Coberdroms Belissima",
       hoverDescription: "6 modelos versáteis para todas as estações",
       shopText: "Ver Coberdroms"
     },
     {
       name: "Travesseiros",
-      image: "/images/travesseiro-memory-foam-premium.jpg",
-      description: "Suporte e maciez",
+      image: "/images/Travesseiro_Nuvare.png",
+      description: "Foco em conforto, resistência e estética refinada.",
       hoverTitle: "Travesseiros Premium",
       hoverDescription: "8 modelos para noites mais confortáveis",
       shopText: "Ver Travesseiros"
