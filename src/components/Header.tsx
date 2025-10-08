@@ -1,45 +1,60 @@
-import React, { useState } from 'react';
-import { Search, User, Heart, ShoppingCart, ChevronDown, Bed, Sofa, Shirt, UtensilsCrossed, Baby, Sparkles } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, LayoutGrid, Maximize, Circle, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [showMegaMenu, setShowMegaMenu] = useState(false);
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const location = useLocation();
 
   const categories = [
     {
       title: "COLCHAS",
-      icon: Bed,
+      icon: Layers,
       itemCount: 18,
       items: ["Colcha Nina", "Colcha Nina Cetim", "Colcha Roma", "Coleção Completa", "Lançamentos", "Promoções"]
     },
     {
       title: "EDREDONS",
-      icon: Sofa,
+      icon: Cloud,
       itemCount: 12,
       items: ["Edredom Casal", "Edredom Solteiro", "Coleção Completa", "Lançamentos", "Promoções", "Conjuntos"]
     },
     {
       title: "JOGOS DE CAMA",
-      icon: Shirt,
+      icon: LayoutGrid,
       itemCount: 66,
       items: ["Linha Buzios", "Linha Ipanema", "Linha Milão", "Coleção Completa", "Lançamentos ✨", "Promoções"]
     },
     {
       title: "COBERDROMS",
-      icon: UtensilsCrossed,
+      icon: Maximize,
       itemCount: 6,
       items: ["Coberdrom Belissima", "Coleção Completa", "Lançamentos", "Promoções", "Conjuntos ✨", "Kits"]
     },
     {
       title: "TRAVESSEIROS",
-      icon: Baby,
+      icon: Circle,
       itemCount: 8,
       items: ["Travesseiro Alvorada", "Travesseiro Bom Sono", "Travesseiro Delicata", "Travesseiro Nuvare", "Coleção Completa ✨", "Promoções"]
     }
   ];
+
+  const handleMouseEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setShowMegaMenu(true);
+  };
+
+  const handleMouseLeave = () => {
+    closeTimerRef.current = setTimeout(() => {
+      setShowMegaMenu(false);
+    }, 300);
+  };
 
   const scrollToHero = () => {
     const heroElement = document.querySelector('main');
@@ -92,8 +107,8 @@ const Header = () => {
             {/* Categories Button */}
             <div className="relative">
               <button
-                onMouseEnter={() => setShowMegaMenu(true)}
-                onMouseLeave={() => setShowMegaMenu(false)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 className="flex items-center space-x-2 text-primary font-medium hover:text-golden transition-colors duration-200"
               >
                 <span>Categorias</span>
@@ -104,8 +119,8 @@ const Header = () => {
               {showMegaMenu && (
                 <div 
                   className="fixed left-1/2 transform -translate-x-1/2 top-20 z-[99999]"
-                  onMouseEnter={() => setShowMegaMenu(true)}
-                  onMouseLeave={() => setShowMegaMenu(false)}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                   style={{
                     width: '90vw',
                     maxWidth: '1200px',

@@ -66,64 +66,24 @@ const Categories = () => {
           </p>
         </div>
 
-        {/* Categories Grid - Adjusted for 5 items: 3 on top row, 2 on bottom */}
+        {/* Unified Categories Grid - 5 items: 3 on top, 2 on bottom centered */}
         <div className="frette-categories-grid" style={{ 
+          display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: 'repeat(2, minmax(400px, 1fr))',
+          gap: '20px',
           maxWidth: '1400px',
           margin: '0 auto'
         }}>
-          {categories.slice(0, 3).map((category) => (
+          {categories.map((category, index) => (
             <div
               key={category.name}
               className="frette-category-card group"
               onClick={() => handleCategoryClick(category.name)}
-            >
-              {/* Background Image */}
-              <div className="frette-image-container">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="frette-background-image"
-                />
-                
-                {/* Normal State Overlay */}
-                <div className="frette-normal-overlay" />
-                
-                {/* Hover State Overlay */}
-                <div className="frette-hover-overlay" />
-              </div>
-
-              {/* Text Content */}
-              <div className="frette-text-container">
-                {/* Normal State Text */}
-                <div className="frette-normal-text">
-                  <h3 className="frette-title">{category.name}</h3>
-                  <p className="frette-description">{category.description}</p>
-                  <span className="frette-link">Explorar</span>
-                </div>
-
-                {/* Hover State Text */}
-                <div className="frette-hover-text">
-                  <h3 className="frette-title">{category.hoverTitle}</h3>
-                  <p className="frette-description">{category.hoverDescription}</p>
-                  <span className="frette-link">{category.shopText} →</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Second Row - Centered 2 items */}
-        <div className="frette-categories-grid mt-6" style={{ 
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          maxWidth: '920px',
-          margin: '24px auto 0'
-        }}>
-          {categories.slice(3).map((category) => (
-            <div
-              key={category.name}
-              className="frette-category-card group"
-              onClick={() => handleCategoryClick(category.name)}
+              style={index >= 3 ? { 
+                gridColumn: index === 3 ? '1 / 3' : '3 / 4',
+                gridRow: '2'
+              } : {}}
             >
               {/* Background Image */}
               <div className="frette-image-container">
