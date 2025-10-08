@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, LayoutGrid, Maximize, Circle, Sparkles } from 'lucide-react';
+import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -14,31 +14,31 @@ const Header = () => {
       title: "COLCHAS",
       icon: Layers,
       itemCount: 18,
-      items: ["Colcha Nina", "Colcha Nina Cetim", "Colcha Roma", "Coleção Completa", "Lançamentos", "Promoções"]
+      items: ["Colcha Nina", "Colcha Nina Cetim", "Colcha Roma", "Coleção Completa"]
     },
     {
       title: "EDREDONS",
       icon: Cloud,
       itemCount: 12,
-      items: ["Edredom Casal", "Edredom Solteiro", "Coleção Completa", "Lançamentos", "Promoções", "Conjuntos"]
+      items: ["Edredom Casal", "Edredom Solteiro", "Coleção Completa", "Conjuntos"]
     },
     {
       title: "JOGOS DE CAMA",
-      icon: LayoutGrid,
+      icon: Bed,
       itemCount: 65,
-      items: ["Linha Buzios", "Linha Ipanema", "Linha Milão", "Coleção Completa", "Lançamentos ✨", "Promoções"]
+      items: ["Linha Buzios", "Linha Ipanema", "Linha Milão", "Coleção Completa"]
     },
     {
       title: "COBERDROMS",
-      icon: Maximize,
+      icon: Wind,
       itemCount: 6,
-      items: ["Coberdrom Belissima", "Coleção Completa", "Lançamentos", "Promoções", "Conjuntos ✨", "Kits"]
+      items: ["Coberdrom Belissima", "Coleção Completa", "Kits"]
     },
     {
       title: "TRAVESSEIROS",
-      icon: Circle,
+      icon: Pilcrow,
       itemCount: 8,
-      items: ["Travesseiro Alvorada", "Travesseiro Bom Sono", "Travesseiro Delicata", "Travesseiro Nuvare", "Coleção Completa ✨", "Promoções"]
+      items: ["Travesseiro Alvorada", "Travesseiro Bom Sono", "Travesseiro Delicata", "Travesseiro Nuvare", "Coleção Completa"]
     }
   ];
 
@@ -161,7 +161,7 @@ const Header = () => {
                             {category.items.map((item, itemIndex) => (
                               <li key={item} className="luxury-category-item">
                                 <div className="luxury-gold-dot"></div>
-                                <a
+                                 <a
                                   href="#"
                                   onClick={(e) => {
                                     e.preventDefault();
@@ -173,12 +173,6 @@ const Header = () => {
                                   className="luxury-item-link"
                                 >
                                   {item}
-                                  {item.includes('✨') && (
-                                    <span className="luxury-new-badge">NEW</span>
-                                  )}
-                                  {itemIndex === 0 && category.items.length > 3 && (
-                                    <span className="luxury-sale-badge">TOP</span>
-                                  )}
                                 </a>
                               </li>
                             ))}
