@@ -195,7 +195,7 @@ const Contact = () => {
         </section>
 
         {/* Contact Form Section */}
-        <section className="py-20">
+        <section id="vamos-conversar" className="py-20">
           <div className="max-w-4xl mx-auto px-4">
             <div className="text-center mb-12 fade-in-up">
               <h2 className="text-4xl font-playfair font-bold text-primary mb-6">
@@ -382,7 +382,7 @@ const Contact = () => {
                     ) : (
                       <div className="flex items-center gap-2">
                         <Mail className="w-4 h-4" />
-                        Enviar Mensagem
+                        Enviar Solicitação
                       </div>
                     )}
                   </Button>
