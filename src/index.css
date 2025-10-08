@@ -556,12 +556,12 @@ All colors MUST be HSL. Golden accents for premium feel.
   @media (max-width: 768px) {
     .frette-categories-grid {
       grid-template-columns: 1fr;
-      grid-template-rows: repeat(6, minmax(300px, auto));
-      gap: 15px;
+      grid-template-rows: repeat(5, minmax(240px, auto));
+      gap: 10px;
     }
 
     .frette-category-card {
-      aspect-ratio: 3/4;
+      aspect-ratio: 4/5;
     }
 
     .frette-image-container img {
@@ -571,11 +571,24 @@ All colors MUST be HSL. Golden accents for premium feel.
     .frette-text-container,
     .frette-normal-text,
     .frette-hover-text {
-      padding: 24px;
+      padding: 16px;
     }
     
     .frette-title {
-      font-size: 24px;
+      font-size: 20px;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    
+    .frette-description {
+      font-size: 12px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    
+    .frette-link {
+      font-size: 12px;
     }
     
     .luxury-mega-menu .grid {
