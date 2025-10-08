@@ -1,11 +1,26 @@
 import React, { useState, useRef } from 'react';
-import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles } from 'lucide-react';
+import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Header = () => {
   const [showMegaMenu, setShowMegaMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchTerm, setMobileSearchTerm] = useState('');
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const location = useLocation();
@@ -131,9 +146,186 @@ const Header = () => {
     }
   };
 
+  const handleMobileSearch = () => {
+    if (!mobileSearchTerm.trim()) {
+      toast({
+        title: "Digite algo para buscar",
+        description: "Insira um termo de busca para encontrar produtos.",
+      });
+      return;
+    }
+    
+    navigate(`/produtos?search=${encodeURIComponent(mobileSearchTerm.trim())}`);
+    setMobileSearchTerm('');
+    setMobileMenuOpen(false);
+  };
+
+  const handleMobileCategoryClick = (categoryTitle: string) => {
+    setMobileMenuOpen(false);
+    const categoryId = categoryIdMap[categoryTitle];
+    
+    if (location.pathname === '/produtos') {
+      setTimeout(() => {
+        const element = document.getElementById(categoryId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      navigate(`/produtos#${categoryId}`);
+    }
+  };
+
+  const handleMobileNavClick = (path: string) => {
+    setMobileMenuOpen(false);
+    navigate(path);
+  };
+
   return (
     <header className="bg-white border-b border-accent shadow-soft relative z-50 font-helvetica overflow-visible">
-      <div className="max-w-7xl mx-auto px-4">
+      {/* Mobile Header */}
+      <div className="md:hidden">
+        <div className="flex items-center justify-between px-4 h-16">
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <button className="text-primary hover:text-golden transition-colors">
+                <Menu className="w-6 h-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] sm:w-[350px] overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle className="text-left text-primary">Menu</SheetTitle>
+              </SheetHeader>
+              
+              <div className="mt-6 space-y-6">
+                {/* Mobile Search */}
+                <div className="relative">
+                  <div className="flex items-center bg-background-soft rounded-lg px-3 py-2">
+                    <Search className="w-4 h-4 text-muted-foreground mr-2" />
+                    <input
+                      type="text"
+                      placeholder="Buscar produtos..."
+                      value={mobileSearchTerm}
+                      onChange={(e) => setMobileSearchTerm(e.target.value)}
+                      className="flex-1 bg-transparent outline-none text-sm text-primary placeholder-muted-foreground"
+                      onKeyPress={(e) => e.key === 'Enter' && handleMobileSearch()}
+                    />
+                  </div>
+                </div>
+
+                {/* Navigation Links */}
+                <nav className="space-y-1">
+                  <button
+                    onClick={() => handleMobileNavClick('/')}
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                      location.pathname === '/' 
+                        ? 'bg-golden/10 text-golden' 
+                        : 'text-primary hover:bg-background-soft'
+                    }`}
+                  >
+                    🏠 Início
+                  </button>
+
+                  {/* Categories Accordion */}
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="categories" className="border-none">
+                      <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-background-soft rounded-lg font-medium text-primary">
+                        📂 Categorias
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-0">
+                        <div className="space-y-1 pl-4 mt-2">
+                          {categories.map((category) => (
+                            <button
+                              key={category.title}
+                              onClick={() => handleMobileCategoryClick(category.title)}
+                              className="w-full text-left px-3 py-2 text-sm text-primary hover:bg-background-soft rounded-lg transition-colors flex items-center gap-2"
+                            >
+                              <category.icon className="w-4 h-4 text-golden" />
+                              <span>{category.title}</span>
+                              <span className="text-xs text-muted-foreground ml-auto">({category.itemCount})</span>
+                            </button>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+
+                  <button
+                    onClick={() => handleMobileNavClick('/sobre')}
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                      location.pathname === '/sobre' 
+                        ? 'bg-golden/10 text-golden' 
+                        : 'text-primary hover:bg-background-soft'
+                    }`}
+                  >
+                    ℹ️ Sobre
+                  </button>
+
+                  <button
+                    onClick={() => handleMobileNavClick('/produtos')}
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                      location.pathname === '/produtos' 
+                        ? 'bg-golden/10 text-golden' 
+                        : 'text-primary hover:bg-background-soft'
+                    }`}
+                  >
+                    📦 Produtos
+                  </button>
+
+                  <button
+                    onClick={() => handleMobileNavClick('/contato')}
+                    className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-colors ${
+                      location.pathname === '/contato' 
+                        ? 'bg-golden/10 text-golden' 
+                        : 'text-primary hover:bg-background-soft'
+                    }`}
+                  >
+                    📞 Contato
+                  </button>
+                </nav>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          {/* Mobile Logo */}
+          <Link to="/" className="absolute left-1/2 transform -translate-x-1/2">
+            <img 
+              src="/logo-leyotex-mobile.png" 
+              alt="Leyotex" 
+              className="h-8 w-auto"
+            />
+          </Link>
+
+          {/* Mobile Icons */}
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => handleIconClick('Perfil')}
+              className="text-primary hover:text-golden transition-colors"
+            >
+              <User className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => handleIconClick('Favoritos')}
+              className="text-primary hover:text-golden transition-colors"
+            >
+              <Heart className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => handleIconClick('Carrinho')}
+              className="relative text-primary hover:text-golden transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 bg-golden text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-medium">
+                3
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden md:block max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">

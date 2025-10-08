@@ -79,8 +79,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
           </CarouselContent>
           {renderList.length > 2 && (
             <>
-              <CarouselPrevious className="left-0 -translate-x-8 h-8 w-8" />
-              <CarouselNext className="right-0 translate-x-8 h-8 w-8" />
+              <CarouselPrevious className="left-2 h-7 w-7 z-10 bg-white/90 backdrop-blur-sm hover:bg-white" />
+              <CarouselNext className="right-2 h-7 w-7 z-10 bg-white/90 backdrop-blur-sm hover:bg-white" />
             </>
           )}
         </Carousel>
