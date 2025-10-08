@@ -1,13 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { Search, User, Heart, ShoppingCart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [showMegaMenu, setShowMegaMenu] = useState(false);
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const categoryIdMap: Record<string, string> = {
+    'COLCHAS': 'colchas',
+    'EDREDONS': 'edredons',
+    'JOGOS DE CAMA': 'jogos-de-cama',
+    'COBERDROMS': 'coberdroms',
+    'TRAVESSEIROS': 'travesseiros'
+  };
 
   const categories = [
     {
@@ -75,6 +84,44 @@ const Header = () => {
       title: `${icon} clicado`,
       description: "Funcionalidade em desenvolvimento",
     });
+  };
+
+  const handleCategoryClick = (categoryTitle: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowMegaMenu(false);
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+
+    const categoryId = categoryIdMap[categoryTitle];
+    
+    // Se já estiver na página /produtos, apenas scrolla
+    if (location.pathname === '/produtos') {
+      setTimeout(() => {
+        const element = document.getElementById(categoryId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      // Navega para a página com hash
+      navigate(`/produtos#${categoryId}`);
+    }
+  };
+
+  const handleExploreAll = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowMegaMenu(false);
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+    
+    // Navega para o topo da página de produtos
+    if (location.pathname === '/produtos') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/produtos');
+    }
   };
 
   return (
@@ -161,18 +208,13 @@ const Header = () => {
                              {category.items.map((item, itemIndex) => (
                               <li key={item} className="luxury-category-item">
                                 <div className="luxury-gold-dot"></div>
-                                <Link
-                                  to={`/produtos#${category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                                  onClick={() => {
-                                    setShowMegaMenu(false);
-                                    if (closeTimerRef.current) {
-                                      clearTimeout(closeTimerRef.current);
-                                    }
-                                  }}
+                                <a
+                                  href={`/produtos#${categoryIdMap[category.title]}`}
+                                  onClick={(e) => handleCategoryClick(category.title, e)}
                                   className="luxury-item-link"
                                 >
                                   {item}
-                                </Link>
+                                </a>
                               </li>
                             ))}
                           </ul>
@@ -183,9 +225,13 @@ const Header = () => {
                     {/* Bottom Link */}
                     <div className="luxury-bottom-link">
                       <div className="luxury-bottom-line"></div>
-                      <Link to="/produtos" className="luxury-explore-link">
+                      <a 
+                        href="/produtos" 
+                        onClick={handleExploreAll}
+                        className="luxury-explore-link"
+                      >
                         Explore todas as coleções →
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 </div>

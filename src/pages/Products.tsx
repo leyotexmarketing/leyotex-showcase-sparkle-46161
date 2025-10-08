@@ -18,6 +18,23 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  // Scroll automático para seção baseado no hash da URL
+  useEffect(() => {
+    if (!loading) {
+      if (location.hash) {
+        const id = location.hash.replace('#', '');
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 300);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }, [location, loading]);
+
   // SEO + Canonical + Hash scroll after load
   useEffect(() => {
     // Title
