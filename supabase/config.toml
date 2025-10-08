@@ -1,1 +1,7 @@
 project_id = "npwtckrpcfogeqkticse"
+
+[functions.approve-client]
+verify_jwt = true
+
+[functions.setup-initial-admin]
+verify_jwt = false
