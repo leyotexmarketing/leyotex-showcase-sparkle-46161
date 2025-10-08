@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_requests: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          business_type: string
+          cnpj: string
+          company_name: string
+          contact_name: string
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          monthly_volume: string
+          phone: string
+          status: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          business_type: string
+          cnpj: string
+          company_name: string
+          contact_name: string
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          monthly_volume: string
+          phone: string
+          status?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          business_type?: string
+          cnpj?: string
+          company_name?: string
+          contact_name?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          monthly_volume?: string
+          phone?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscriptions: {
+        Row: {
+          email: string
+          id: string
+          status: string | null
+          subscribed_at: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          status?: string | null
+          subscribed_at?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          status?: string | null
+          subscribed_at?: string | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string
@@ -23,6 +92,7 @@ export type Database = {
           image_url: string | null
           keywords: string
           name: string
+          price: number | null
           seo_description: string
           seo_title: string
           size: string | null
@@ -38,6 +108,7 @@ export type Database = {
           image_url?: string | null
           keywords: string
           name: string
+          price?: number | null
           seo_description: string
           seo_title: string
           size?: string | null
@@ -53,6 +124,7 @@ export type Database = {
           image_url?: string | null
           keywords?: string
           name?: string
+          price?: number | null
           seo_description?: string
           seo_title?: string
           size?: string | null
@@ -62,18 +134,87 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          cnpj: string | null
+          company_name: string | null
+          created_at: string | null
+          email: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cnpj?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cnpj?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      generate_random_password: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_slug: {
         Args: { input_text: string }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "client"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -200,6 +341,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "client"],
+    },
   },
 } as const

@@ -45,6 +45,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
                   category={categoryTitle}
                   imageUrl={(product as any).image_url}
                   collection={(product as any).collection}
+                  price={(product as any).price}
                 />
               </CarouselItem>
             ))}
@@ -75,6 +76,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
                   category={categoryTitle}
                   imageUrl={(product as any).image_url}
                   collection={(product as any).collection}
+                  price={(product as any).price}
                 />
               </CarouselItem>
             ))}

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { Building2, Mail, Phone, MapPin, Sparkles, Users, TrendingUp, Award } from 'lucide-react';
 import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
 
 // Validation schema
 const contactSchema = z.object({
@@ -102,12 +103,25 @@ const Contact = () => {
       // Validate form data
       contactSchema.parse(formData);
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Save to Supabase
+      const { error } = await supabase
+        .from('contact_requests')
+        .insert({
+          company_name: formData.companyName,
+          cnpj: formData.cnpj,
+          contact_name: formData.contactName,
+          email: formData.email,
+          phone: formData.phone,
+          business_type: formData.businessType,
+          monthly_volume: formData.monthlyVolume,
+          message: formData.message
+        });
+
+      if (error) throw error;
 
       toast({
-        title: "Mensagem enviada com sucesso!",
-        description: "Nossa equipe entrará em contato em até 24 horas.",
+        title: "Solicitação enviada com sucesso!",
+        description: "Nossa equipe analisará sua solicitação e entrará em contato em breve.",
       });
 
       // Reset form
@@ -135,6 +149,13 @@ const Contact = () => {
         toast({
           title: "Erro no formulário",
           description: "Por favor, corrija os campos destacados.",
+          variant: "destructive"
+        });
+      } else {
+        console.error('Erro ao enviar solicitação:', error);
+        toast({
+          title: "Erro ao enviar",
+          description: "Tente novamente mais tarde.",
           variant: "destructive"
         });
       }

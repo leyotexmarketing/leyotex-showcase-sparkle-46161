@@ -1,25 +1,55 @@
 import React, { useState } from 'react';
 import { Mail, Check, Bell, Tag, Lightbulb } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setEmail('');
+    if (!email) return;
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert({ email: email.trim() });
+
+      if (error) {
+        if (error.code === '23505') {
+          toast({
+            title: "Email já cadastrado",
+            description: "Este email já está na nossa lista de newsletter.",
+            variant: "destructive"
+          });
+        } else {
+          throw error;
+        }
+      } else {
+        setIsSubscribed(true);
+        setEmail('');
+        toast({
+          title: "Cadastrado com sucesso!",
+          description: "Você receberá nossas novidades em breve.",
+        });
+        
+        setTimeout(() => {
+          setIsSubscribed(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error);
       toast({
-        title: "Cadastrado com sucesso!",
-        description: "Você receberá nossas novidades em breve.",
+        title: "Erro ao cadastrar",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive"
       });
-      
-      setTimeout(() => {
-        setIsSubscribed(false);
-      }, 3000);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -73,14 +103,19 @@ const Newsletter = () => {
               </div>
               <button
                 type="submit"
-                disabled={isSubscribed}
+                disabled={isSubscribed || isSubmitting}
                 className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
                   isSubscribed
                     ? 'bg-success text-white cursor-not-allowed'
                     : 'btn-golden hover:scale-105'
                 }`}
               >
-                {isSubscribed ? (
+                {isSubmitting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Cadastrando...</span>
+                  </div>
+                ) : isSubscribed ? (
                   <div className="flex items-center space-x-2">
                     <Check className="w-5 h-5" />
                     <span>Cadastrado!</span>

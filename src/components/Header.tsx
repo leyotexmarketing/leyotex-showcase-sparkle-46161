@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { Search, User, Heart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu, Home, FolderOpen, Info, Package, Phone } from 'lucide-react';
+import { Search, User, Heart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu, Home, FolderOpen, Info, Package, Phone, LogOut, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Sheet,
   SheetContent,
@@ -15,6 +16,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [showMegaMenu, setShowMegaMenu] = useState(false);
@@ -25,6 +33,16 @@ const Header = () => {
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAdmin, isClient, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: "Logout realizado",
+      description: "Você saiu do sistema.",
+    });
+    navigate('/');
+  };
 
   const categoryIdMap: Record<string, string> = {
     'COLCHAS': 'colchas',
@@ -487,12 +505,50 @@ const Header = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
-            <button 
-              onClick={() => handleIconClick('Perfil')}
-              className="text-primary hover:text-golden transition-colors duration-200"
-            >
-              <User className="w-6 h-6" />
-            </button>
+            {/* Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button 
+                  className="text-primary hover:text-golden transition-colors duration-200"
+                >
+                  <User className="w-6 h-6" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {!user ? (
+                  <DropdownMenuItem onClick={() => navigate('/login')}>
+                    <User className="w-4 h-4 mr-2" />
+                    Entrar
+                  </DropdownMenuItem>
+                ) : (
+                  <>
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuItem onClick={() => navigate('/admin')}>
+                          <Shield className="w-4 h-4 mr-2" />
+                          Painel Admin
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    {isClient && (
+                      <>
+                        <DropdownMenuItem onClick={() => navigate('/perfil')}>
+                          <User className="w-4 h-4 mr-2" />
+                          Meu Perfil
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sair
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <button 
               onClick={() => handleIconClick('Favoritos')}
               className="text-primary hover:text-golden transition-colors duration-200"

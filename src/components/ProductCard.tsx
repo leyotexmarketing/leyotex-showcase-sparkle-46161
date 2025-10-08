@@ -3,17 +3,20 @@ import { Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProductCardProps {
   name: string;
   category: string;
   imageUrl?: string | null;
   collection?: string | null;
+  price?: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, collection }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, collection, price }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { isClient } = useAuth();
 
   const getProductDescription = (category: string, collection: string | null): string => {
     // Normalizar categoria para melhor matching
@@ -82,6 +85,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, col
     }, 100);
   };
 
+  const handleComprarClick = () => {
+    const whatsappNumber = '5511999999999'; // Número do WhatsApp
+    const message = `Olá! Tenho interesse no produto: *${name}* (${category})`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <div className="group bg-card border border-border rounded-lg shadow-soft hover:shadow-medium transition-all duration-300 overflow-hidden flex flex-col">
       {/* Image Section */}
@@ -125,15 +135,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, col
         <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">
           {getProductDescription(category, collection)}
         </p>
+
+        {/* Price - Only visible for clients */}
+        {isClient && price && (
+          <div className="mb-3">
+            <p className="text-lg font-bold text-golden">
+              R$ {price.toFixed(2)}
+            </p>
+          </div>
+        )}
         
-        {/* Solicitar Button */}
-        <Button
-          onClick={handleSolicitarClick}
-          className="w-full bg-golden hover:bg-golden-dark text-white text-sm py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md"
-          size="sm"
-        >
-          Solicitar
-        </Button>
+        {/* Button - Changes based on client status */}
+        {isClient ? (
+          <Button
+            onClick={handleComprarClick}
+            className="w-full bg-success hover:bg-success/90 text-white text-sm py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md"
+            size="sm"
+          >
+            Comprar
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSolicitarClick}
+            className="w-full bg-golden hover:bg-golden-dark text-white text-sm py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md"
+            size="sm"
+          >
+            Solicitar
+          </Button>
+        )}
       </div>
     </div>
   );
