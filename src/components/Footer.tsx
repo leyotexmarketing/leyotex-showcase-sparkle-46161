@@ -2,25 +2,55 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Youtube, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newsletterEmail) {
-      setIsSubscribed(true);
-      setNewsletterEmail('');
+    if (!newsletterEmail) return;
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert({ email: newsletterEmail.trim() });
+
+      if (error) {
+        if (error.code === '23505') {
+          toast({
+            title: "Email já cadastrado",
+            description: "Este email já está na nossa lista de newsletter.",
+            variant: "destructive"
+          });
+        } else {
+          throw error;
+        }
+      } else {
+        setIsSubscribed(true);
+        setNewsletterEmail('');
+        toast({
+          title: "Cadastrado com sucesso!",
+          description: "Você receberá nossas novidades em breve.",
+        });
+        
+        setTimeout(() => {
+          setIsSubscribed(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error);
       toast({
-        title: "Obrigado!",
-        description: "Você foi inscrito na nossa newsletter.",
+        title: "Erro ao cadastrar",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive"
       });
-      
-      setTimeout(() => {
-        setIsSubscribed(false);
-      }, 3000);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -180,14 +210,14 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                disabled={isSubscribed}
+                disabled={isSubscribed || isSubmitting}
                 className={`w-full px-4 py-2 rounded font-medium transition-all duration-200 ${
                   isSubscribed
                     ? 'bg-success text-white cursor-not-allowed'
                     : 'bg-golden hover:bg-golden-dark text-white hover:scale-105'
                 }`}
               >
-                {isSubscribed ? 'Obrigado!' : 'Cadastrar'}
+                {isSubmitting ? 'Cadastrando...' : isSubscribed ? 'Obrigado!' : 'Cadastrar'}
               </button>
             </form>
 

@@ -328,12 +328,6 @@ const Header = () => {
             >
               <User className="w-5 h-5" />
             </button>
-            <button 
-              onClick={() => handleIconClick('Favoritos')}
-              className="text-primary hover:text-golden transition-colors"
-            >
-              <Heart className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </div>
@@ -548,13 +542,6 @@ const Header = () => {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <button 
-              onClick={() => handleIconClick('Favoritos')}
-              className="text-primary hover:text-golden transition-colors duration-200"
-            >
-              <Heart className="w-6 h-6" />
-            </button>
           </div>
         </div>
       </div>
