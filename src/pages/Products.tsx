@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronRight, Layers, Cloud, Bed, Wind, Pilcrow, Loader2 } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ChevronRight, Layers, Cloud, Bed, Wind, Pilcrow, Loader2, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/types/product';
 import { useToast } from '@/hooks/use-toast';
@@ -11,8 +11,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const Products = () => {
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchTerm = searchParams.get('search') || '';
 
   useEffect(() => {
     fetchProducts();
@@ -152,6 +154,24 @@ const Products = () => {
     return products.filter(p => p.category === categoryFilter && p.collection === collection);
   };
 
+  const filterProducts = () => {
+    if (!searchTerm.trim()) return products;
+
+    const term = searchTerm.toLowerCase().trim();
+    return products.filter(p => 
+      p.name.toLowerCase().includes(term) ||
+      p.category.toLowerCase().includes(term) ||
+      (p.collection && p.collection.toLowerCase().includes(term)) ||
+      (p.keywords && p.keywords.toLowerCase().includes(term))
+    );
+  };
+
+  const clearSearch = () => {
+    setSearchParams({});
+  };
+
+  const filteredProducts = filterProducts();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -171,11 +191,23 @@ const Products = () => {
           {/* Title */}
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 font-playfair">
-              Nossos Produtos
+              {searchTerm ? 'Resultados da Busca' : 'Nossos Produtos'}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Explore nossa coleção completa de produtos premium para sua casa
+              {searchTerm 
+                ? `${filteredProducts.length} ${filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'} para "${searchTerm}"`
+                : 'Explore nossa coleção completa de produtos premium para sua casa'
+              }
             </p>
+            {searchTerm && (
+              <button
+                onClick={clearSearch}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-golden text-white rounded-lg hover:bg-golden-dark transition-colors"
+              >
+                <X className="w-4 h-4" />
+                Limpar busca
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -203,6 +235,32 @@ const Products = () => {
                 </div>
               ))}
             </>
+          ) : searchTerm ? (
+            // Search Results
+            filteredProducts.length > 0 ? (
+              <ProductCarousel
+                products={filteredProducts}
+                categoryTitle={`Resultados para "${searchTerm}"`}
+              />
+            ) : (
+              <div className="text-center py-20">
+                <div className="inline-flex p-6 bg-golden/10 rounded-full mb-6">
+                  <Layers className="w-12 h-12 text-golden" />
+                </div>
+                <h3 className="text-2xl font-bold text-primary mb-2">
+                  Nenhum produto encontrado
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  Não encontramos produtos para "{searchTerm}"
+                </p>
+                <button
+                  onClick={clearSearch}
+                  className="px-6 py-3 bg-golden text-white rounded-lg hover:bg-golden-dark transition-colors"
+                >
+                  Ver todos os produtos
+                </button>
+              </div>
+            )
           ) : (
             // Category Sections
             categories.map((category, index) => {

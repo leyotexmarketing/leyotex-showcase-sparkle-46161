@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [showMegaMenu, setShowMegaMenu] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const location = useLocation();
@@ -73,10 +74,16 @@ const Header = () => {
   };
 
   const handleSearch = () => {
-    toast({
-      title: "Busca realizada",
-      description: "Funcionalidade em desenvolvimento",
-    });
+    if (!searchTerm.trim()) {
+      toast({
+        title: "Digite algo para buscar",
+        description: "Insira um termo de busca para encontrar produtos.",
+      });
+      return;
+    }
+    
+    navigate(`/produtos?search=${encodeURIComponent(searchTerm.trim())}`);
+    setSearchTerm('');
   };
 
   const handleIconClick = (icon: string) => {
@@ -281,6 +288,8 @@ const Header = () => {
                 <input
                   type="text"
                   placeholder="Buscar produtos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="flex-1 bg-transparent outline-none text-primary placeholder-muted-foreground"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
