@@ -322,12 +322,48 @@ const Header = () => {
 
           {/* Mobile Icons */}
           <div className="flex items-center gap-4">
-            <button 
-              onClick={() => handleIconClick('Perfil')}
-              className="text-primary hover:text-golden transition-colors"
-            >
-              <User className="w-5 h-5" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button 
+                  className="text-primary hover:text-golden transition-colors"
+                >
+                  <User className="w-5 h-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {!user ? (
+                  <DropdownMenuItem onClick={() => navigate('/login')}>
+                    <User className="w-4 h-4 mr-2" />
+                    Entrar
+                  </DropdownMenuItem>
+                ) : (
+                  <>
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuItem onClick={() => navigate('/admin')}>
+                          <Shield className="w-4 h-4 mr-2" />
+                          Painel Admin
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    {isClient && (
+                      <>
+                        <DropdownMenuItem onClick={() => navigate('/perfil')}>
+                          <User className="w-4 h-4 mr-2" />
+                          Meu Perfil
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sair
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
