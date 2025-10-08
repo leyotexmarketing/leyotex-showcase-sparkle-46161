@@ -191,9 +191,9 @@ const Header = () => {
                     {/* Bottom Link */}
                     <div className="luxury-bottom-link">
                       <div className="luxury-bottom-line"></div>
-                      <a href="#" className="luxury-explore-link">
+                      <Link to="/produtos" className="luxury-explore-link">
                         Explore todas as coleções →
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>

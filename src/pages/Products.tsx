@@ -18,6 +18,43 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  // SEO + Canonical + Hash scroll after load
+  useEffect(() => {
+    // Title
+    document.title = 'Produtos - Leyotex | Colchas, Edredons, Jogos de Cama, Coberdroms, Travesseiros';
+
+    // Meta description
+    const desc = 'Confira todos os produtos Leyotex: colchas, edredons, jogos de cama, coberdroms e travesseiros.';
+    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    meta.content = desc;
+
+    // Canonical
+    const canonicalHref = `${window.location.origin}/produtos`;
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalHref;
+
+    // Hash scroll (after products loaded)
+    const tryScroll = () => {
+      const hash = window.location.hash?.replace('#', '');
+      if (hash) {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    if (!loading) tryScroll();
+  }, [loading]);
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -89,6 +126,7 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <main role="main">
       
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-primary/5 to-background py-12 md:py-16">
@@ -185,6 +223,7 @@ const Products = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );
