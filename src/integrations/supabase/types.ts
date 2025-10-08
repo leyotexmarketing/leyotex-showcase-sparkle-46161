@@ -14,13 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      products: {
+        Row: {
+          category: string
+          collection: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          keywords: string
+          name: string
+          seo_description: string
+          seo_title: string
+          size: string | null
+          slug: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          collection?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          keywords: string
+          name: string
+          seo_description: string
+          seo_title: string
+          size?: string | null
+          slug: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          collection?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          keywords?: string
+          name?: string
+          seo_description?: string
+          seo_title?: string
+          size?: string | null
+          slug?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_slug: {
+        Args: { input_text: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
