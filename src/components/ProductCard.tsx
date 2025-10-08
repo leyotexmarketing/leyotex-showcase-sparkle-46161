@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ProductCardProps {
   name: string;
@@ -12,42 +13,64 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, collection }) => {
   const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const getProductDescription = (category: string, collection: string | null): string => {
+    // Normalizar categoria para melhor matching
+    const normalizedCategory = category
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '-');
+
     const descriptions: Record<string, Record<string, string>> = {
       colcha: {
-        'Nina': 'Design clássico com toque macio e acabamento refinado',
-        'Roma': 'Elegância atemporal com caimento perfeito',
-        'Nina Cetim': 'Brilho sofisticado e maciez incomparável',
-        default: 'Equilíbrio entre leveza e aconchego'
+        'Nina': 'Design clássico macio',
+        'Roma': 'Elegância atemporal premium',
+        'Nina Cetim': 'Brilho sofisticado',
+        default: 'Leveza e aconchego'
       },
       edredom: {
-        'Casal': 'Conforto térmico ideal para duas pessoas',
-        'Solteiro': 'Aquecimento perfeito e leveza garantida',
-        default: 'Maciez e conforto para todas as estações'
+        'Casal': 'Conforto térmico duplo',
+        'Solteiro': 'Aquecimento ideal individual',
+        default: 'Maciez todas estações'
       },
       'jogo-de-cama': {
-        'Buzios': 'Tecido premium com alta durabilidade',
-        'Ipanema': 'Design moderno e toque suave',
-        'Milão': 'Sofisticação e qualidade superior',
-        default: 'Conjunto completo de alto padrão'
+        'Buzios': 'Tecido premium durável',
+        'Ipanema': 'Design moderno suave',
+        'Milão': 'Sofisticação superior',
+        default: 'Alto padrão completo'
       },
       coberdrom: {
-        'Belissima': 'Tecnologia térmica e acabamento premium',
-        default: 'Versatilidade e conforto em todas as estações'
+        'Belissima': 'Tecnologia térmica premium',
+        default: 'Versatilidade e conforto'
       },
       travesseiro: {
-        'Alvorada': 'Suporte firme e respirabilidade',
-        'Bom Sono': 'Conforto equilibrado para noites tranquilas',
-        'Delicata': 'Maciez delicada e suporte adequado',
-        'Nuvare': 'Tecnologia de ponta para máximo conforto',
-        default: 'Ergonomia e conforto para seu descanso'
+        'Alvorada': 'Suporte firme respirável',
+        'Bom Sono': 'Conforto equilibrado',
+        'Delicata': 'Maciez delicada',
+        'Nuvare': 'Tecnologia máximo conforto',
+        default: 'Ergonomia ideal'
       }
     };
 
-    const categoryDescriptions = descriptions[category.toLowerCase()] || { default: 'Produto de qualidade premium' };
-    return categoryDescriptions[collection || 'default'] || categoryDescriptions['default'];
+    const categoryDesc = descriptions[normalizedCategory];
+    
+    if (!categoryDesc) {
+      console.warn(`Categoria não encontrada: ${category} (normalizada: ${normalizedCategory})`);
+      return 'Qualidade e conforto premium';
+    }
+    
+    return categoryDesc[collection || 'default'] || categoryDesc['default'];
   };
+
+  useEffect(() => {
+    console.log('ProductCard:', { 
+      category, 
+      collection, 
+      description: getProductDescription(category, collection) 
+    });
+  }, [category, collection]);
 
   const handleSolicitarClick = () => {
     navigate('/contato#vamos-conversar');
@@ -64,11 +87,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, col
       {/* Image Section */}
       <div className="relative aspect-[3/4] bg-muted overflow-hidden">
         {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          <>
+            {!imageLoaded && (
+              <Skeleton className="absolute inset-0" />
+            )}
+            <img
+              src={imageUrl}
+              alt={name}
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setImageLoaded(true)}
+              className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
             <Package className="w-16 h-16 text-muted-foreground/30" strokeWidth={1} />
