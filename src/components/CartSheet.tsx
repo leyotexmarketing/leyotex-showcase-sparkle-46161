@@ -12,8 +12,12 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
+const formatPrice = (value: number): string => {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
+
 export const CartSheet: React.FC = () => {
-  const { items, removeFromCart, updateQuantity, clearCart, getTotalItems, isCartOpen, setIsCartOpen } = useCart();
+  const { items, removeFromCart, updateQuantity, clearCart, getTotalItems, getCartTotal, isCartOpen, setIsCartOpen } = useCart();
   const { toast } = useToast();
 
   const handleFinalizarPedido = () => {
@@ -27,19 +31,32 @@ export const CartSheet: React.FC = () => {
     }
 
     // Formatar mensagem para WhatsApp
-    let message = "Olá, gostaria de finalizar meu pedido:\n\n📦 *Itens do Pedido:*\n\n";
+    let message = "🛍️ *Olá! Gostaria de finalizar meu pedido:*\n\n";
+    message += "━━━━━━━━━━━━━━━━━━━\n";
+    message += "📦 *ITENS DO PEDIDO*\n";
+    message += "━━━━━━━━━━━━━━━━━━━\n\n";
     
     items.forEach((item, index) => {
       const emoji = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'][index] || '📌';
-      message += `${emoji} ${item.name} (${item.category})\n`;
-      message += `   • Quantidade: ${item.quantity} unidade${item.quantity > 1 ? 's' : ''}\n`;
+      const subtotal = (item.price || 0) * item.quantity;
+      
+      message += `${emoji} ${item.name}\n`;
+      message += `   📁 Categoria: ${item.category}\n`;
       if (item.collection) {
-        message += `   • Coleção: ${item.collection}\n`;
+        message += `   🏷️ Coleção: ${item.collection}\n`;
       }
-      message += `\n`;
+      message += `   📊 Quantidade: ${item.quantity} unidade${item.quantity > 1 ? 's' : ''}\n`;
+      message += `   💵 Preço unitário: ${formatPrice(item.price || 0)}\n`;
+      message += `   💰 Subtotal: ${formatPrice(subtotal)}\n\n`;
     });
 
-    message += `💰 *Total de itens: ${getTotalItems()}*`;
+    message += "━━━━━━━━━━━━━━━━━━━\n";
+    message += "📊 *RESUMO DO PEDIDO*\n";
+    message += "━━━━━━━━━━━━━━━━━━━\n\n";
+    message += `🔢 Total de itens: ${getTotalItems()}\n`;
+    message += `💰 *VALOR TOTAL: ${formatPrice(getCartTotal())}*\n\n`;
+    message += "━━━━━━━━━━━━━━━━━━━\n";
+    message += "✅ Aguardo confirmação!";
 
     const whatsappUrl = `https://wa.me/5511996506590?text=${encodeURIComponent(message)}`;
     
@@ -160,6 +177,10 @@ export const CartSheet: React.FC = () => {
         {items.length > 0 && (
           <SheetFooter className="px-4 md:px-6 py-4 border-t mt-auto">
             <div className="w-full space-y-3">
+              <div className="flex items-center justify-between py-2 px-1">
+                <span className="text-sm font-medium text-muted-foreground">Total do Pedido:</span>
+                <span className="text-lg font-bold text-golden">{formatPrice(getCartTotal())}</span>
+              </div>
               <Button
                 onClick={handleFinalizarPedido}
                 className="w-full bg-golden hover:bg-golden-dark text-white"
