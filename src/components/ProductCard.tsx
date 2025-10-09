@@ -4,19 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
+import { Product } from '@/types/product';
 
 interface ProductCardProps {
+  id: string;
   name: string;
   category: string;
   imageUrl?: string | null;
   collection?: string | null;
   price?: number;
+  slug: string;
+  size: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, collection, price }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ id, name, category, imageUrl, collection, price, slug, size }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const { isClient } = useAuth();
+  const { addToCart, setIsCartOpen } = useCart();
+  const { toast } = useToast();
 
   const getProductDescription = (category: string, collection: string | null): string => {
     // Normalizar categoria para melhor matching
@@ -96,10 +104,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, category, imageUrl, col
   };
 
   const handleComprarClick = () => {
-    const whatsappNumber = '5511999999999'; // Número do WhatsApp
-    const message = `Olá! Tenho interesse no produto: *${name}* (${category})`;
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const product: Product = {
+      id,
+      name,
+      slug,
+      category,
+      collection,
+      size,
+      image_url: imageUrl || null,
+      price,
+      seo_title: name,
+      seo_description: '',
+      keywords: '',
+      status: 'active',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    addToCart(product, 1);
+    setIsCartOpen(true);
+    
+    toast({
+      title: "Produto adicionado!",
+      description: `${name} foi adicionado ao carrinho.`,
+    });
   };
 
   return (

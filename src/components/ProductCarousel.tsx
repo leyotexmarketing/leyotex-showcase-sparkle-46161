@@ -41,11 +41,14 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
             {renderList.map((product) => (
               <CarouselItem key={(product as any).id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                 <ProductCard
+                  id={(product as any).id || 'placeholder'}
                   name={product.name}
                   category={categoryTitle}
                   imageUrl={(product as any).image_url}
                   collection={(product as any).collection}
                   price={(product as any).price}
+                  slug={(product as any).slug || ''}
+                  size={(product as any).size || ''}
                 />
               </CarouselItem>
             ))}
@@ -72,11 +75,14 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, categoryTit
             {renderList.map((product) => (
               <CarouselItem key={(product as any).id} className="pl-2 basis-1/2">
                 <ProductCard
+                  id={(product as any).id || 'placeholder'}
                   name={product.name}
                   category={categoryTitle}
                   imageUrl={(product as any).image_url}
                   collection={(product as any).collection}
                   price={(product as any).price}
+                  slug={(product as any).slug || ''}
+                  size={(product as any).size || ''}
                 />
               </CarouselItem>
             ))}

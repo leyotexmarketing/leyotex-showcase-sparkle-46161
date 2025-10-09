@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { Search, User, Heart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu, Home, FolderOpen, Info, Package, Phone, LogOut, Shield } from 'lucide-react';
+import { Search, User, Heart, ChevronDown, Layers, Cloud, Bed, Wind, Pilcrow, Sparkles, Menu, Home, FolderOpen, Info, Package, Phone, LogOut, Shield, ShoppingCart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { CartSheet } from '@/components/CartSheet';
 import {
   Sheet,
   SheetContent,
@@ -34,6 +36,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, isClient, signOut } = useAuth();
+  const { getTotalItems, setIsCartOpen } = useCart();
 
   const handleSignOut = async () => {
     await signOut();
@@ -321,7 +324,20 @@ const Header = () => {
           </Link>
 
           {/* Mobile Icons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {isClient && (
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="text-primary hover:text-golden transition-colors relative"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-golden text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button 
@@ -535,6 +551,20 @@ const Header = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
+            {isClient && (
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="text-primary hover:text-golden transition-colors duration-200 relative"
+              >
+                <ShoppingCart className="w-6 h-6" />
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-golden text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </button>
+            )}
+            
             {/* Profile Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -581,6 +611,8 @@ const Header = () => {
           </div>
         </div>
       </div>
+      
+      <CartSheet />
     </header>
   );
 };

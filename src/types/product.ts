@@ -12,6 +12,7 @@ export interface Product {
   status: string;
   created_at: string;
   updated_at: string;
+  price?: number;
 }
 
 export const CATEGORIES = {
