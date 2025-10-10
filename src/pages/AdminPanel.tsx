@@ -17,8 +17,13 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, CheckCircle, Mail } from 'lucide-react';
+import { Loader2, CheckCircle, Mail, Plus, Search } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
+import { ProductsStats } from '@/components/admin/ProductsStats';
+import { ProductsTable } from '@/components/admin/ProductsTable';
+import { ProductEditModal } from '@/components/admin/ProductEditModal';
+import { Product } from '@/types/product';
 
 interface ContactRequest {
   id: string;
@@ -44,15 +49,37 @@ interface NewsletterSubscription {
 const AdminPanel = () => {
   const [contactRequests, setContactRequests] = useState<ContactRequest[]>([]);
   const [newsletters, setNewsletters] = useState<NewsletterSubscription[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [approving, setApproving] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
   const [showCredentials, setShowCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [showProductModal, setShowProductModal] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchData();
+    setupRealtimeSubscription();
   }, []);
+
+  useEffect(() => {
+    // Filter products based on search query
+    if (searchQuery.trim() === '') {
+      setFilteredProducts(products);
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = products.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query) ||
+          (p.collection && p.collection.toLowerCase().includes(query))
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, products]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -67,13 +94,51 @@ const AdminPanel = () => {
         .select('*')
         .order('subscribed_at', { ascending: false });
 
+      const { data: prods } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
       setContactRequests(requests || []);
       setNewsletters(subs || []);
+      setProducts(prods || []);
+      setFilteredProducts(prods || []);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const setupRealtimeSubscription = () => {
+    const channel = supabase
+      .channel('products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products',
+        },
+        () => {
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
+
+  const handleAddProduct = () => {
+    setEditingProduct(null);
+    setShowProductModal(true);
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setShowProductModal(true);
   };
 
   const handleApproveClick = (requestId: string) => {
@@ -149,6 +214,9 @@ const AdminPanel = () => {
             </TabsTrigger>
             <TabsTrigger value="newsletter">
               Newsletter ({newsletters.length})
+            </TabsTrigger>
+            <TabsTrigger value="products">
+              Gerenciador de Produtos ({products.length})
             </TabsTrigger>
           </TabsList>
 
@@ -240,6 +308,40 @@ const AdminPanel = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="products" className="space-y-6">
+            <ProductsStats products={products} />
+
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+              <div className="relative w-full sm:w-96">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar produtos..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button onClick={handleAddProduct}>
+                <Plus className="w-4 h-4 mr-2" />
+                Adicionar Produto
+              </Button>
+            </div>
+
+            {filteredProducts.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  {searchQuery ? 'Nenhum produto encontrado' : 'Nenhum produto cadastrado'}
+                </CardContent>
+              </Card>
+            ) : (
+              <ProductsTable
+                products={filteredProducts}
+                onEdit={handleEditProduct}
+                onUpdate={fetchData}
+              />
+            )}
+          </TabsContent>
         </Tabs>
       </main>
 
@@ -291,6 +393,14 @@ const AdminPanel = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Modal de edição/criação de produto */}
+      <ProductEditModal
+        product={editingProduct}
+        open={showProductModal}
+        onOpenChange={setShowProductModal}
+        onSuccess={fetchData}
+      />
     </div>
   );
 };
