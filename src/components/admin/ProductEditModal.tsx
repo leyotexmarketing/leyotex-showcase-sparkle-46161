@@ -30,7 +30,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { Product, CATEGORIES, CATEGORY_LABELS } from '@/types/product';
 
 const productSchema = z.object({
@@ -44,7 +44,7 @@ const productSchema = z.object({
   seo_title: z.string().max(60, 'Título SEO deve ter no máximo 60 caracteres'),
   seo_description: z.string().max(160, 'Descrição SEO deve ter no máximo 160 caracteres'),
   keywords: z.string(),
-  image_url: z.string().optional(),
+  images: z.array(z.string()).max(3, 'Máximo de 3 imagens').optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -58,6 +58,9 @@ interface ProductEditModalProps {
 
 export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: ProductEditModalProps) => {
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const { toast } = useToast();
 
   const form = useForm<ProductFormValues>({
@@ -73,12 +76,13 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
       seo_title: '',
       seo_description: '',
       keywords: '',
-      image_url: '',
+      images: [],
     },
   });
 
   useEffect(() => {
     if (product) {
+      const productImages = (product as any).images || (product.image_url ? [product.image_url] : []);
       form.reset({
         name: product.name,
         slug: product.slug,
@@ -90,8 +94,10 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
         seo_title: product.seo_title,
         seo_description: product.seo_description,
         keywords: product.keywords,
-        image_url: product.image_url || '',
+        images: productImages,
       });
+      setPreviewUrls(productImages);
+      setImageFiles([]);
     } else {
       form.reset({
         name: '',
@@ -104,8 +110,10 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
         seo_title: '',
         seo_description: '',
         keywords: '',
-        image_url: '',
+        images: [],
       });
+      setPreviewUrls([]);
+      setImageFiles([]);
     }
   }, [product, form]);
 
@@ -128,9 +136,86 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
     }
   };
 
+  const handleImageUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    const currentImagesCount = previewUrls.length;
+    const newFilesArray = Array.from(files);
+    const totalImages = currentImagesCount + newFilesArray.length;
+
+    if (totalImages > 3) {
+      toast({
+        title: 'Limite excedido',
+        description: 'Você pode adicionar no máximo 3 imagens',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Create preview URLs for new files
+    const newPreviews = newFilesArray.map(file => URL.createObjectURL(file));
+    setPreviewUrls([...previewUrls, ...newPreviews]);
+    setImageFiles([...imageFiles, ...newFilesArray]);
+  };
+
+  const removeImage = (index: number) => {
+    const newPreviews = previewUrls.filter((_, i) => i !== index);
+    const newFiles = imageFiles.filter((_, i) => i !== index);
+    setPreviewUrls(newPreviews);
+    setImageFiles(newFiles);
+  };
+
+  const uploadImages = async (): Promise<string[]> => {
+    if (imageFiles.length === 0) {
+      return previewUrls;
+    }
+
+    setUploading(true);
+    const uploadedUrls: string[] = [];
+
+    try {
+      for (const file of imageFiles) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError, data } = await supabase.storage
+          .from('product-images')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false,
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(publicUrl);
+      }
+
+      // Combine uploaded URLs with existing URLs (those that weren't File objects)
+      const existingUrls = previewUrls.filter(url => url.startsWith('http'));
+      return [...existingUrls, ...uploadedUrls];
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao fazer upload das imagens',
+        description: error.message,
+        variant: 'destructive',
+      });
+      throw error;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const onSubmit = async (values: ProductFormValues) => {
     setSaving(true);
     try {
+      // Upload images first
+      const imageUrls = await uploadImages();
+
       if (product) {
         const { error } = await supabase
           .from('products')
@@ -145,7 +230,8 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
             seo_title: values.seo_title,
             seo_description: values.seo_description,
             keywords: values.keywords,
-            image_url: values.image_url || null,
+            images: imageUrls,
+            image_url: imageUrls[0] || null,
             updated_at: new Date().toISOString(),
           })
           .eq('id', product.id);
@@ -168,7 +254,8 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
           seo_title: values.seo_title,
           seo_description: values.seo_description,
           keywords: values.keywords,
-          image_url: values.image_url || null,
+          images: imageUrls,
+          image_url: imageUrls[0] || null,
         });
 
         if (error) throw error;
@@ -340,25 +427,45 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
 
             <FormField
               control={form.control}
-              name="image_url"
+              name="images"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL da Imagem</FormLabel>
+                  <FormLabel>Imagens do Produto (máx. 3)</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="/images/produto.png" />
-                  </FormControl>
-                  {field.value && (
-                    <div className="mt-2">
-                      <img
-                        src={field.value}
-                        alt="Preview"
-                        className="w-32 h-32 object-cover rounded-lg border"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
+                    <div className="space-y-4">
+                      <Input
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        multiple
+                        disabled={previewUrls.length >= 3}
+                        onChange={(e) => handleImageUpload(e.target.files)}
+                        className="cursor-pointer"
                       />
+                      {previewUrls.length > 0 && (
+                        <div className="grid grid-cols-3 gap-4">
+                          {previewUrls.map((url, index) => (
+                            <div key={index} className="relative group">
+                              <img
+                                src={url}
+                                alt={`Preview ${index + 1}`}
+                                className="w-full h-32 object-cover rounded-lg border"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute top-2 right-2 bg-destructive text-destructive-foreground p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        {previewUrls.length}/3 imagens adicionadas
+                      </p>
                     </div>
-                  )}
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -416,11 +523,11 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
                 Cancelar
               </Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? (
+              <Button type="submit" disabled={saving || uploading}>
+                {(saving || uploading) ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Salvando...
+                    {uploading ? 'Enviando imagens...' : 'Salvando...'}
                   </>
                 ) : (
                   'Salvar'

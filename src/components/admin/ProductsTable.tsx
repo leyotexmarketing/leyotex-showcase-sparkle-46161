@@ -200,9 +200,9 @@ export const ProductsTable = ({ products, onEdit, onUpdate }: ProductsTableProps
           {products.map((product) => (
             <TableRow key={product.id}>
               <TableCell>
-                {product.image_url ? (
+                {(product as any).images?.[0] || product.image_url ? (
                   <img
-                    src={product.image_url}
+                    src={(product as any).images?.[0] || product.image_url}
                     alt={product.name}
                     className="w-12 h-12 object-cover rounded"
                     onError={(e) => {
@@ -306,9 +306,9 @@ export const ProductsTable = ({ products, onEdit, onUpdate }: ProductsTableProps
         <Card key={product.id}>
           <CardContent className="pt-6">
             <div className="flex gap-4">
-              {product.image_url ? (
+              {(product as any).images?.[0] || product.image_url ? (
                 <img
-                  src={product.image_url}
+                  src={(product as any).images?.[0] || product.image_url}
                   alt={product.name}
                   className="w-20 h-20 object-cover rounded flex-shrink-0"
                   onError={(e) => {
