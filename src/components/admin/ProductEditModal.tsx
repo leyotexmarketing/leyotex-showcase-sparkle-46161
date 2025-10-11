@@ -30,7 +30,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, X } from 'lucide-react';
+import { Loader2, X, Upload, Image as ImageIcon } from 'lucide-react';
 import { Product, CATEGORIES, CATEGORY_LABELS } from '@/types/product';
 
 const productSchema = z.object({
@@ -82,7 +82,7 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
 
   useEffect(() => {
     if (product) {
-      const productImages = (product as any).images || (product.image_url ? [product.image_url] : []);
+      const productImages = product.images || (product.image_url ? [product.image_url] : []);
       form.reset({
         name: product.name,
         slug: product.slug,
@@ -433,37 +433,71 @@ export const ProductEditModal = ({ product, open, onOpenChange, onSuccess }: Pro
                   <FormLabel>Imagens do Produto (máx. 3)</FormLabel>
                   <FormControl>
                     <div className="space-y-4">
-                      <Input
-                        type="file"
-                        accept="image/jpeg,image/jpg,image/png,image/webp"
-                        multiple
-                        disabled={previewUrls.length >= 3}
-                        onChange={(e) => handleImageUpload(e.target.files)}
-                        className="cursor-pointer"
-                      />
-                      {previewUrls.length > 0 && (
+                      <div className="flex items-center gap-3">
+                        <label
+                          htmlFor="image-upload"
+                          className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-dashed transition-colors cursor-pointer ${
+                            previewUrls.length >= 3
+                              ? 'border-muted bg-muted/50 cursor-not-allowed opacity-50'
+                              : 'border-primary/50 hover:border-primary hover:bg-primary/5'
+                          }`}
+                        >
+                          <Upload className="w-5 h-5" />
+                          <span className="font-medium">
+                            {previewUrls.length >= 3 ? 'Limite atingido' : 'Escolher arquivos'}
+                          </span>
+                        </label>
+                        <input
+                          id="image-upload"
+                          type="file"
+                          accept="image/jpeg,image/jpg,image/png,image/webp"
+                          multiple
+                          disabled={previewUrls.length >= 3}
+                          onChange={(e) => handleImageUpload(e.target.files)}
+                          className="hidden"
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          {previewUrls.length}/3 imagens
+                        </span>
+                      </div>
+
+                      {previewUrls.length > 0 ? (
                         <div className="grid grid-cols-3 gap-4">
                           {previewUrls.map((url, index) => (
                             <div key={index} className="relative group">
                               <img
                                 src={url}
                                 alt={`Preview ${index + 1}`}
-                                className="w-full h-32 object-cover rounded-lg border"
+                                className="w-full h-32 object-cover rounded-lg border-2 border-border"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/placeholder.svg';
+                                }}
                               />
                               <button
                                 type="button"
                                 onClick={() => removeImage(index)}
-                                className="absolute top-2 right-2 bg-destructive text-destructive-foreground p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute top-2 right-2 bg-destructive text-destructive-foreground p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                title="Remover imagem"
                               >
                                 <X className="w-4 h-4" />
                               </button>
+                              <div className="absolute bottom-2 left-2 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-medium">
+                                {index + 1}
+                              </div>
                             </div>
                           ))}
                         </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
+                          <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
+                          <p className="text-sm text-muted-foreground">
+                            Nenhuma imagem adicionada
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Formatos aceitos: JPEG, JPG, PNG, WEBP
+                          </p>
+                        </div>
                       )}
-                      <p className="text-xs text-muted-foreground">
-                        {previewUrls.length}/3 imagens adicionadas
-                      </p>
                     </div>
                   </FormControl>
                   <FormMessage />

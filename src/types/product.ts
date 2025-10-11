@@ -9,6 +9,7 @@ export interface Product {
   seo_description: string;
   keywords: string;
   image_url: string | null;
+  images?: string[];
   status: string;
   created_at: string;
   updated_at: string;

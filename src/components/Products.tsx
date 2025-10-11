@@ -94,7 +94,7 @@ const Products = () => {
               {/* Product Image */}
               <div className="relative overflow-hidden">
                 <img
-                  src={product.image_url || getPlaceholderImage(product.category)}
+                  src={product.images?.[0] || product.image_url || getPlaceholderImage(product.category)}
                   alt={product.name}
                   className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
