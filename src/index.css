@@ -71,6 +71,19 @@ All colors MUST be HSL. Golden accents for premium feel.
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* ARKKHE Gradient Animation */
+  @keyframes shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
   /* Dark mode - keeping minimal as not priority */
   .dark {
     --background: 0 0% 10%;
@@ -96,6 +109,23 @@ All colors MUST be HSL. Golden accents for premium feel.
 }
 
 @layer components {
+  /* ARKKHE Gradient Text */
+  .arkkhe-gradient {
+    background: linear-gradient(
+      90deg,
+      #b49464 0%,
+      #FFFFFF 25%,
+      #C0C0C0 50%,
+      #FFFFFF 75%,
+      #b49464 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
   /* Button variants */
   .btn-golden {
     @apply bg-gradient-to-r from-golden to-golden-light text-white font-semibold px-6 py-3 rounded-lg hover:from-golden-dark hover:to-golden transition-all duration-300 shadow-golden;

@@ -254,6 +254,21 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Powered by ARKKHE */}
+        <div className="mb-8">
+          <p className="text-white text-sm">
+            Powered by{' '}
+            <a
+              href="https://arkkhe.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="arkkhe-gradient font-orbitron text-xl font-bold inline-block"
+            >
+              ARKKHE
+            </a>
+          </p>
+        </div>
+
         {/* Copyright */}
         <div className="border-t border-secondary pt-6 text-center">
           <p className="text-gray-400 text-sm">

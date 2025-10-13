@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         'helvetica': ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
         'playfair': ['Playfair Display', 'serif'],
+        'orbitron': ['Orbitron', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
