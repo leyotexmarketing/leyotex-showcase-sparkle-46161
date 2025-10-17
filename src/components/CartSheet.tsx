@@ -58,7 +58,7 @@ export const CartSheet: React.FC = () => {
     message += "━━━━━━━━━━━━━━━━━━━\n";
     message += "✅ Aguardo confirmação!";
 
-    const whatsappUrl = `https://wa.me/5511996506590?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/5511960645095?text=${encodeURIComponent(message)}`;
     
     // Abrir WhatsApp
     window.open(whatsappUrl, '_blank');

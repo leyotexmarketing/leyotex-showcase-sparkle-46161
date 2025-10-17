@@ -272,7 +272,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-secondary pt-6 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Leyotex. Todos os direitos reservados. | CNPJ: 00.000.000/0001-00
+            © 2024 Leyotex. Todos os direitos reservados. | CNPJ: 49.289.865/0001-09
           </p>
         </div>
       </div>
