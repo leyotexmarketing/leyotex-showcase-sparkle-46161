@@ -58,6 +58,7 @@ const AdminPanel = () => {
   const [showCredentials, setShowCredentials] = useState<{ email: string; password: string } | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductModal, setShowProductModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('requests');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -207,7 +208,7 @@ const AdminPanel = () => {
       <main className="flex-1 container mx-auto px-4 py-8">
         <h1 className="text-3xl font-playfair font-bold mb-8">Painel Administrativo</h1>
 
-        <Tabs defaultValue="requests" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList>
             <TabsTrigger value="requests">
               Solicitações de Contato ({contactRequests.filter(r => r.status === 'pending').length})
