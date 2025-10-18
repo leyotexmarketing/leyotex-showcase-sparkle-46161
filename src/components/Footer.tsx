@@ -56,15 +56,12 @@ const Footer = () => {
 
   const footerLinks = {
     institucional: [
-      { name: "Sobre a Leyotex", href: "/sobre" },
-      { name: "Responsabilidade Social", href: "/sobre" },
-      { name: "Política de Privacidade", href: "#" }
+      { name: "Sobre a Leyotex", href: "/sobre#top" },
+      { name: "Política de Privacidade", href: "/politica-de-privacidade" }
     ],
     atendimento: [
-      { name: "Central de Ajuda", href: "#" },
-      { name: "Fale Conosco", href: "/contato" },
-      { name: "Trocas e Devoluções", href: "#" },
-      { name: "Garantias", href: "#" }
+      { name: "Central de Ajuda", href: "/contato#vamos-conversar" },
+      { name: "Fale Conosco", href: "/contato#vamos-conversar" }
     ],
     categorias: [
       { name: "Colchas", href: "/produtos#colchas" },

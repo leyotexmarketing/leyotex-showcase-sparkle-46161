@@ -49,6 +49,14 @@ const Contact = () => {
       document.head.appendChild(metaDescription);
     }
 
+    // Scroll to form if hash is #vamos-conversar
+    if (window.location.hash === '#vamos-conversar') {
+      setTimeout(() => {
+        const element = document.getElementById('vamos-conversar');
+        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
     // Add fade-in animation
     const observerOptions = {
       threshold: 0.1,

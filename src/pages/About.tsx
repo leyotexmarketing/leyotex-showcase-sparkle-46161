@@ -16,6 +16,11 @@ const About = () => {
       document.head.appendChild(metaDescription);
     }
 
+    // Scroll to top if hash is #top
+    if (window.location.hash === '#top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // Add fade-in animation to elements when they come into view
     const observerOptions = {
       threshold: 0.1,
