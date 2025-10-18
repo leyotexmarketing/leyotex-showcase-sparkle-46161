@@ -431,7 +431,7 @@ const Contact = () => {
                   <Phone className="w-6 h-6 text-golden" />
                 </div>
                 <h3 className="font-semibold text-primary mb-2">Telefone</h3>
-                <p className="text-muted-foreground">(11) 99999-9999</p>
+                <p className="text-muted-foreground">(11) 96064-5095</p>
               </div>
 
               <div className="text-center bg-white rounded-xl p-6 shadow-soft fade-in-up">
@@ -439,7 +439,7 @@ const Contact = () => {
                   <Mail className="w-6 h-6 text-golden" />
                 </div>
                 <h3 className="font-semibold text-primary mb-2">Email</h3>
-                <p className="text-muted-foreground">vendas@leyotex.com.br</p>
+                <p className="text-muted-foreground">leyotex.marketing@gmail.com</p>
               </div>
 
               <div className="text-center bg-white rounded-xl p-6 shadow-soft fade-in-up">
