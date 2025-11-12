@@ -25,13 +25,13 @@ const Maintenance = () => {
             Entre em contato:
           </p>
           <a 
-            href="mailto:leyotex.marketing@gmail.com" 
+            href="mailto:arkkhecorp@gmail.com" 
             className="text-primary hover:text-primary/80 transition-colors font-medium"
           >
-            leyotex.marketing@gmail.com
+            arkkhecorp@gmail.com
           </a>
           <p className="text-muted-foreground">
-            (11) 96064-5095
+            (11) 99482-9276
           </p>
         </div>
       </div>
