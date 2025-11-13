@@ -129,10 +129,10 @@ const Testimonials = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
-                className={`transition-all duration-500 ${
+                className={`absolute inset-0 p-8 md:p-12 transition-opacity duration-500 ${
                   index === currentTestimonial 
-                    ? 'opacity-100 transform translate-x-0' 
-                    : 'opacity-0 absolute inset-0 p-8 md:p-12 transform translate-x-full'
+                    ? 'opacity-100 z-10 pointer-events-auto' 
+                    : 'opacity-0 z-0 pointer-events-none'
                 }`}
               >
                 {/* Stars */}
