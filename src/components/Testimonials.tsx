@@ -125,11 +125,11 @@ const Testimonials = () => {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className="bg-white rounded-xl shadow-medium p-8 md:p-12 relative overflow-hidden">
+          <div className="bg-white rounded-xl shadow-medium p-8 md:p-12 relative overflow-hidden min-h-[400px] flex items-center">
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
-                className={`absolute inset-0 p-8 md:p-12 transition-opacity duration-500 ${
+                className={`absolute inset-0 p-8 md:p-12 flex flex-col justify-center transition-opacity duration-500 ${
                   index === currentTestimonial 
                     ? 'opacity-100 z-10 pointer-events-auto' 
                     : 'opacity-0 z-0 pointer-events-none'
